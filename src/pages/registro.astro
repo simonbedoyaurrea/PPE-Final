@@ -1,0 +1,129 @@
+---
+import "../styles/tailwind.css";
+---
+
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>World Cup Fantasy</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lexend:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="bg-background text-text min-h-screen overflow-x-hidden bg-stadium">
+    <!-- Ambient glow -->
+    <div
+      class="pointer-events-none fixed left-1/2 top-0 z-0 h-[400px] w-[800px] -translate-x-1/2 rounded-full bg-primary/10 blur-[120px]"
+    />
+
+    <main class="relative z-10 mx-auto flex min-h-screen max-w-container items-center justify-center px-6 py-12">
+      <section class="w-full max-w-2xl">
+        <!-- Header -->
+        <div class="mb-10 text-center">
+          <h1
+            class="font-display text-5xl font-extrabold uppercase italic tracking-tight text-primary drop-shadow-lg"
+          >
+            Registro
+          </h1>
+
+          <p class="mx-auto mt-4 max-w-lg text-lg text-textMuted">
+          </p>
+        </div>
+
+        <!-- Card -->
+        <div
+          class="relative overflow-hidden rounded-2xl border border-white/10 bg-surface/60 p-8 shadow-2xl backdrop-blur-xl"
+        >
+          <div
+            class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-transparent via-primary to-transparent opacity-70"
+          />
+
+          <form class="space-y-6">
+            <!-- names -->
+            <div class="grid gap-6 md:grid-cols-2">
+              <div class="space-y-2">
+                <label class="text-sm font-semibold uppercase tracking-wide text-textMuted">
+                  Nombre
+                </label>
+
+                <input
+                  type="text"
+                  placeholder="Pep Guardiola"
+                  class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition focus:border-primary"
+                />
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-sm font-semibold uppercase tracking-wide text-textMuted">
+                  Nombre Equipo
+                </label>
+
+                <input
+                  type="text"
+                  placeholder="Dream Team FC"
+                  class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition focus:border-primary"
+                />
+              </div>
+            </div>
+
+            <!-- email -->
+            <div class="space-y-2">
+              <label class="text-sm font-semibold uppercase tracking-wide text-textMuted">
+                Email
+              </label>
+
+              <input
+                type="email"
+                placeholder="manager@fantasy.com"
+                class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition focus:border-primary"
+              />
+            </div>
+
+            <!-- passwords -->
+            <div class="grid gap-6 md:grid-cols-2">
+              <div class="space-y-2">
+                <label class="text-sm font-semibold uppercase tracking-wide text-textMuted">
+                  Contraseña
+                </label>
+
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition focus:border-primary"
+                />
+              </div>
+            </div>
+
+     
+            <!-- button -->
+            <button
+              type="submit"
+              class="w-full rounded-2xl bg-primary px-6 py-4 font-display text-lg font-bold uppercase text-black transition hover:scale-[1.01] hover:shadow-glow"
+            >
+              Crear cuenta
+            </button>
+
+            <!-- login -->
+            <div class="pt-2 text-center">
+              <p class="text-sm text-textMuted">
+                Tienes cuenta?
+
+                <a
+                  href="/login"
+                  class="font-semibold text-accent transition hover:opacity-80"
+                >
+                  Iniciar sesion
+                </a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
