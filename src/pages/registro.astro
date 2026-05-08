@@ -43,7 +43,7 @@ import "../styles/tailwind.css";
             class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-transparent via-primary to-transparent opacity-70"
           />
 
-          <form class="space-y-6">
+          <form onsubmit="handleSubmit(event)" class="space-y-6">
             <!-- names -->
             <div class="grid gap-6 md:grid-cols-2">
               <div class="space-y-2">
@@ -52,6 +52,7 @@ import "../styles/tailwind.css";
                 </label>
 
                 <input
+                  name="name"
                   type="text"
                   placeholder="Pep Guardiola"
                   class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition focus:border-primary"
@@ -64,6 +65,7 @@ import "../styles/tailwind.css";
                 </label>
 
                 <input
+                  name="teamName"
                   type="text"
                   placeholder="Dream Team FC"
                   class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition focus:border-primary"
@@ -78,6 +80,7 @@ import "../styles/tailwind.css";
               </label>
 
               <input
+                name="email"
                 type="email"
                 placeholder="manager@fantasy.com"
                 class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition focus:border-primary"
@@ -92,6 +95,7 @@ import "../styles/tailwind.css";
                 </label>
 
                 <input
+                  name="password"
                   type="password"
                   placeholder="••••••••"
                   class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition focus:border-primary"
@@ -126,4 +130,36 @@ import "../styles/tailwind.css";
       </section>
     </main>
   </body>
+  <script is:inline>
+    async function handleSubmit(event) {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+
+      const email = formData.get("email");
+      const password = formData.get("password");
+      const name = formData.get("name");
+      const teamName = formData.get("teamName");
+
+      const response = await fetch("/api/registro", {
+        method: "POST",
+        headers: {  
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          email,
+          password,
+          name,
+          teamName,
+        }),
+      });
+
+      const data = await response.json();
+
+      console.log(data);
+    }
+
+    window.handleSubmit = handleSubmit;
+</script>
 </html>

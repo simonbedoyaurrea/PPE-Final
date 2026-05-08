@@ -1,0 +1,26 @@
+<script type="module">
+  import { supabase } from "../lib/supabase.js";
+
+  async function getUser() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      window.location.href = "/login";
+      return;
+    }
+
+    document.getElementById("title").textContent =
+      user.user_metadata.name;
+
+    document.getElementById("team").textContent =
+      user.user_metadata.team_name;
+  }
+
+  getUser();
+</script>
+
+<h1 id="title"></h1>
+
+<p id="team"></p>
