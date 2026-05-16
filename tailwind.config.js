@@ -13,6 +13,7 @@ export default {
         primary: "#95d3ba",
         background: "#121414",
 
+        "primary-fixed": "#b0f0d6",
         "primary-fixed-dim": "#95d3ba",
         "on-primary": "#003829",
         "on-primary-fixed": "#002117",
@@ -20,19 +21,24 @@ export default {
         "primary-container": "#064e3b",
         "on-primary-container": "#80bea6",
 
+        surface: "#1e2020",
+        "surface-dim": "#121414",
         "surface-container": "#1e2020",
         "surface-container-lowest": "#0c0f0f",
+        "surface-container-high": "#282a2b",
         "surface-container-highest": "#333535",
         "surface-variant": "#333535",
+        "surface-bright": "#37393a",
+
+        text: "#e2e2e2",
+        textMuted: "#bfc9c3",
 
         "on-surface": "#e2e2e2",
         "on-surface-variant": "#bfc9c3",
 
-        "tertiary-fixed-dim": "#f9bd22",
-        "surface-container-high": "#282a2b",
-        "surface-bright": "#37393a",
-
+        accent: "#f9bd22",
         tertiary: "#f9bd22",
+        "tertiary-fixed-dim": "#f9bd22",
         "tertiary-container": "#584000",
         "on-tertiary": "#402d00",
         "on-tertiary-fixed": "#261a00",
@@ -52,6 +58,9 @@ export default {
       },
 
       fontFamily: {
+        sans: ["Inter", "sans-serif"],
+        display: ["Lexend", "sans-serif"],
+
         "label-bold": ["Lexend", "sans-serif"],
         "headline-md": ["Lexend", "sans-serif"],
         "headline-lg": ["Lexend", "sans-serif"],
@@ -91,7 +100,21 @@ export default {
       },
 
       maxWidth: {
+        container: "1280px",
         "container-max": "1280px",
+      },
+
+      boxShadow: {
+        glow: "0 0 20px rgba(149, 211, 186, 0.15)",
+      },
+
+      backdropBlur: {
+        xs: "2px",
+      },
+
+      backgroundImage: {
+        stadium:
+          "radial-gradient(circle at top center, rgba(255,255,255,0.08) 0%, rgba(18,20,20,1) 70%), linear-gradient(180deg, #064e3b 0%, #121414 100%)",
       },
     },
   },
