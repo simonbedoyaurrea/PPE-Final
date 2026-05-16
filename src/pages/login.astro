@@ -118,7 +118,16 @@ import "../styles/tailwind.css";
 
         const data = await response.json();
 
-        console.log(data);
+        if (response.ok) {
+          console.log("✅ Login exitoso");
+          console.log("📋 Datos del usuario:", data.user);
+          console.log("🔐 Session:", data.session);
+          
+          // Redirigir a dashboard
+          window.location.href = "/dashboard";
+        } else {
+          console.error("❌ Error en login:", data.error);
+        }
         }
         window.handleSubmit = handleSubmit;
     </script>

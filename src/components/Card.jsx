@@ -1,4 +1,5 @@
 export default function Card({
+  id,
   image,
   price,
   name,
@@ -6,6 +7,7 @@ export default function Card({
   club,
   flag,
   age,
+  onCompra,
 }) {
   return (
     <article className="group relative overflow-hidden rounded-[2.2rem_2.2rem_1rem_1rem] border border-outline-variant/20 bg-surface-container-highest/40 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.35)] transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_20px_50px_rgba(0,0,0,0.45)]">
@@ -110,7 +112,10 @@ export default function Card({
           </span>
         </div>
 
-        <button className="group/button relative overflow-hidden rounded-xl bg-primary px-5 py-3 font-bold text-on-primary-fixed transition-all duration-300 hover:scale-105 hover:bg-primary-fixed hover:shadow-[0_0_20px_rgba(149,211,186,0.35)] active:scale-95">
+        <button
+          onClick={() => onCompra(id)}
+          className="group/button relative overflow-hidden rounded-xl bg-primary px-5 py-3 font-bold text-on-primary-fixed transition-all duration-300 hover:scale-105 hover:bg-primary-fixed hover:shadow-[0_0_20px_rgba(149,211,186,0.35)] active:scale-95"
+        >
           <div className="absolute inset-0 translate-x-[-120%] bg-white/20 transition-transform duration-500 group-hover/button:translate-x-[120%]" />
 
           <span className="relative z-10 tracking-wide">COMPRAR</span>

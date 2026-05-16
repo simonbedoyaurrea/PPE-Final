@@ -2,7 +2,7 @@ export default function BarraBusqueda({ busqueda, setBusqueda }) {
   return (
     <div className="relative w-full max-w-xs hidden sm:block">
       <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">
-        search
+        busca
       </span>
 
       <input

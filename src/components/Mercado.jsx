@@ -10,6 +10,25 @@ export default function Mercado({ jugadores, nacionalidades }) {
   const [filtroNacionalidad, setFiltroNacionalidad] = useState(null);
   const [busqueda, setBusqueda] = useState("");
 
+  const comprarJugador = async (jugadorId) => {
+    const response = await fetch("/api/comprar", {
+      method: "POST",
+
+      credentials: "include",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        jugadorId,
+      }),
+    });
+    const data = await response.json();
+
+    console.log(data);
+  };
+
   const fuse = useMemo(() => {
     return new Fuse(jugadores, {
       keys: ["nombre", "club", "nacionalidad"],
@@ -52,6 +71,7 @@ export default function Mercado({ jugadores, nacionalidades }) {
     filtroPrecio,
     fuse,
   ]);
+
   return (
     <>
       <div class="flex-1 px-4 md:px-margin py-margin pb-32 md:pb-margin">
@@ -91,6 +111,7 @@ export default function Mercado({ jugadores, nacionalidades }) {
             <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-gutter gap-y-12 mt-8">
               {jugadoresFiltrados.map((j) => (
                 <Card
+                  onCompra={comprarJugador}
                   price={j.precio}
                   age={j.edad}
                   name={j.nombre}
@@ -98,6 +119,7 @@ export default function Mercado({ jugadores, nacionalidades }) {
                   club={j.club}
                   flag={j.nacionalidad}
                   image={j.imagen_url}
+                  id={j.id}
                 />
               ))}
             </div>

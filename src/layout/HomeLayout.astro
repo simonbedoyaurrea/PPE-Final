@@ -1,7 +1,17 @@
 ---
 import "../styles/tailwind.css";
+import { supabase } from "../pages/lib/supabase";
 
 const { title = "World Cup Fantasy" } = Astro.props;
+
+// Obtener usuario autenticado
+let user = null;
+const token = Astro.cookies.get("sb-access-token")?.value;
+
+if (token) {
+  const { data: { user: authUser } } = await supabase.auth.getUser(token);
+  user = authUser;
+}
 ---
 
 <html lang="es" class="dark">
@@ -62,7 +72,11 @@ const { title = "World Cup Fantasy" } = Astro.props;
             <h2 class="font-headline-md text-headline-md text-on-surface">
               Fantasy Football
             </h2>
-           
+            {user && (
+              <p class="text-on-surface-variant text-sm font-label-md">
+                @{user.user_metadata?.username || user.email}
+              </p>
+            )}
           </div>
         </div>
  
