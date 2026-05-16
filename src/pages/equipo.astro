@@ -1,0 +1,60 @@
+---
+import CanchaEquipo from "../components/CanchaEquipo.jsx";
+import HomeLayout from "../layout/HomeLayout.astro";
+
+const jugadores = [
+  {
+    nombre: "Mbappe",
+    posicion: "DEL",
+    precio: 12,
+    imagen_url:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuDz_lo_UVhay5QSRAUtWz_fnYmXFS1-mnv0MOgnTOFXggNrWxrM-mAW67Ii6LsGq1A4eyvon4HexTws_dmEldEOrbRvL1aJGTcXL9XNeCSXSWsrkX7hk5LUTUo-JSL9QcKHREwUBe7iORlMHrwaBD9Ro1maJ9kRQX159dreOJuIuTWaFzMssB9t11niV1vJz7HkFP0oDsDn_bQWQC9REJg4PvD1XKcCk7UHp9p77JtDQVozYct3LQyp6cTGQ6aDaRmlgWmuPLoxs-I",
+  },
+  {
+    nombre: "Haaland",
+    posicion: "DEL",
+    precio: 14,
+    imagen_url:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuBngwT_t74nY1wgl-_sOQCuXsKxwm1D9puP6bU6ySDlirHBWLqRZAec8-8vNDXlSYU-RDcySlYFiwt5GZtgCg3Qh7DO4WXAG20qJMXPbqS6yXLFF2jQZ1hL3EaAW_WJgolvwStx4xNHq14yucrSHubWp2Path77aGfCjqSOuEghB-lBH87v0MLXowfVPizJ9hsU4KGW0QtI2Pn6KbjlusMbVKVwywLpZiVdMjaimzSEveVe7NyLnU8MHJlEe_SB8SXQjcMzK1bMJJI",
+  },
+  { nombre: "Saka", posicion: "DEL", precio: 8 },
+  { nombre: "Bellingham", posicion: "MED", precio: 11 },
+  { nombre: "Pedri", posicion: "MED", precio: 8 },
+  { nombre: "De Bruyne", posicion: "MED", precio: 10 },
+  { nombre: "Davies", posicion: "DEF", precio: 6 },
+  { nombre: "Dias", posicion: "DEF", precio: 6 },
+  { nombre: "Saliba", posicion: "DEF", precio: 7 },
+  { nombre: "Hakimi", posicion: "DEF", precio: 9 },
+  { nombre: "Alisson", posicion: "POR", precio: 7 },
+];
+---
+
+<HomeLayout title="Mi Equipo | World Cup Fantasy" active="equipo">
+  <div class="flex-1 px-4 py-margin pb-32 md:px-margin md:pb-margin">
+    <div class="mx-auto flex max-w-container-max flex-col gap-margin">
+      <header class="flex flex-col gap-4 border-b border-outline-variant/20 pb-6 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p class="mb-2 font-label-bold text-label-bold uppercase tracking-wider text-primary">
+            World Cup Fantasy
+          </p>
+          <h1 class="font-headline-xl text-headline-xl text-on-surface">
+            Mi Equipo
+          </h1>
+          <p class="mt-3 max-w-2xl font-body-lg text-body-lg text-on-surface-variant">
+            Arma tu once titular y revisa el presupuesto disponible para completar la plantilla.
+          </p>
+        </div>
+
+        <a
+          class="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 font-label-bold text-label-bold text-on-primary transition hover:bg-primary-fixed-dim"
+          href="/dashboard"
+        >
+          <span class="material-symbols-outlined">storefront</span>
+          Ir al mercado
+        </a>
+      </header>
+
+      <CanchaEquipo jugadores={jugadores} presupuesto={100} />
+    </div>
+  </div>
+</HomeLayout>
