@@ -113,7 +113,7 @@ export default function Card({
         <button className="group/button relative overflow-hidden rounded-xl bg-primary px-5 py-3 font-bold text-on-primary-fixed transition-all duration-300 hover:scale-105 hover:bg-primary-fixed hover:shadow-[0_0_20px_rgba(149,211,186,0.35)] active:scale-95">
           <div className="absolute inset-0 translate-x-[-120%] bg-white/20 transition-transform duration-500 group-hover/button:translate-x-[120%]" />
 
-          <span className="relative z-10 tracking-wide">BUY</span>
+          <span className="relative z-10 tracking-wide">COMPRAR</span>
         </button>
       </div>
     </article>
