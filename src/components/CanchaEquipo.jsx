@@ -28,11 +28,26 @@ const borderClass = {
 
 const formatMoney = (value) => `$${Number(value || 0).toFixed(1)}M`;
 
+const normalizarPosicion = (posicion) => {
+  if (!posicion) return "MED";
+
+  const p = posicion.toLowerCase();
+
+  if (p.includes("delantero") || p === "del") return "DEL";
+  if (p.includes("medio") || p.includes("mediocampista") || p === "med") return "MED";
+  if (p.includes("defensa") || p === "def") return "DEF";
+  if (p.includes("portero") || p.includes("arquero") || p === "por") return "POR";
+
+  return "MED";
+};
+
 export default function CanchaEquipo({ jugadores = [], presupuesto = 100 }) {
   const jugadoresPorPosicion = jugadores.reduce((grupos, jugador) => {
-    const posicion = jugador.posicion || jugador.position || "MED";
+    const posicion = normalizarPosicion(jugador.posicion || jugador.position);
+
     grupos[posicion] = grupos[posicion] || [];
     grupos[posicion].push(jugador);
+
     return grupos;
   }, {});
 
@@ -42,10 +57,13 @@ export default function CanchaEquipo({ jugadores = [], presupuesto = 100 }) {
   }));
 
   const titulares = plantilla.filter((slot) => slot.jugador);
+
   const valorEquipo = titulares.reduce(
-    (total, slot) => total + Number(slot.jugador?.precio || slot.jugador?.value || 0),
-    0,
+    (total, slot) =>
+      total + Number(slot.jugador?.precio || slot.jugador?.value || 0),
+    0
   );
+
   const presupuestoLibre = presupuesto - valorEquipo;
   const progreso = `${Math.round((titulares.length / slots.length) * 100)}%`;
 
@@ -60,6 +78,7 @@ export default function CanchaEquipo({ jugadores = [], presupuesto = 100 }) {
                 "repeating-linear-gradient(0deg, transparent, transparent 10%, rgba(255,255,255,0.06) 10%, rgba(255,255,255,0.06) 20%)",
             }}
           />
+
           <div className="absolute left-1/2 top-1/2 h-px w-[120%] -translate-x-1/2 -translate-y-1/2 border border-primary/15" />
           <div className="absolute left-1/2 top-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-primary/15" />
           <div className="absolute left-1/2 top-0 h-[15%] w-[40%] -translate-x-1/2 border-x-2 border-b-2 border-primary/15" />
@@ -68,28 +87,34 @@ export default function CanchaEquipo({ jugadores = [], presupuesto = 100 }) {
           {plantilla.map((slot) => {
             const jugador = slot.jugador;
             const nombre = jugador?.nombre || jugador?.name || "Vacante";
-            const imagen = jugador?.imagen_url || jugador?.image;
+            const imagen = jugador?.imagen_url || jugador?.image || "";
 
             return (
               <div
-                className="absolute z-20 flex w-16 -translate-x-1/2 -translate-y-1/2 flex-col items-center transition-transform hover:scale-105 md:w-20"
+                className="absolute z-20 flex w-24 -translate-x-1/2 -translate-y-1/2 flex-col items-center transition-transform hover:scale-105"
                 key={slot.id}
                 style={{ left: `${slot.left}%`, top: `${slot.top}%` }}
               >
                 <div
-                  className={`relative z-10 -mb-3 flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border-[3px] shadow-[0_4px_20px_rgba(0,0,0,0.5)] md:h-14 md:w-14 ${
-                    jugador ? borderClass[slot.position] : "border-dashed border-outline-variant"
+                  className={`relative z-10 -mb-4 flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-[4px] shadow-[0_4px_20px_rgba(0,0,0,0.5)] ${
+                    jugador
+                      ? borderClass[slot.position]
+                      : "border-dashed border-outline-variant"
                   } bg-surface-variant`}
                 >
                   {imagen ? (
-                    <img className="h-full w-full object-cover" src={imagen} alt={nombre} />
+                    <img
+                      className="h-full w-full object-cover object-top"
+                      src={imagen}
+                      alt={nombre}
+                    />
                   ) : (
-                    <span className="material-symbols-outlined text-on-surface-variant">add</span>
+                    <span className="text-3xl text-on-surface-variant">+</span>
                   )}
                 </div>
 
                 <div
-                  className={`flex w-full flex-col items-center rounded-md border px-1 pb-1 pt-4 shadow-xl backdrop-blur-md ${
+                  className={`flex w-full flex-col items-center rounded-md border px-1 pb-1 pt-5 shadow-xl backdrop-blur-md ${
                     jugador
                       ? "border-outline-variant/40 bg-surface-container-highest/90"
                       : "border-dashed border-outline-variant/60 bg-surface-container/80"
@@ -101,7 +126,7 @@ export default function CanchaEquipo({ jugadores = [], presupuesto = 100 }) {
                 </div>
 
                 <span
-                  className={`absolute -right-2 -top-2 z-30 rounded-sm px-1.5 text-[9px] font-bold ${
+                  className={`absolute -right-1 -top-2 z-30 rounded-sm px-1.5 text-[9px] font-bold ${
                     badgeClass[slot.position]
                   }`}
                 >
@@ -118,12 +143,16 @@ export default function CanchaEquipo({ jugadores = [], presupuesto = 100 }) {
           <h2 className="mb-4 font-label-bold text-label-bold uppercase tracking-wider text-on-surface-variant">
             Plantilla
           </h2>
+
           <div className="mb-4 flex items-baseline gap-2">
             <span className="font-headline-xl text-headline-xl text-on-surface">
               {titulares.length}
             </span>
-            <span className="font-headline-md text-headline-md text-primary">/ 11</span>
+            <span className="font-headline-md text-headline-md text-primary">
+              / 11
+            </span>
           </div>
+
           <div className="h-2 w-full overflow-hidden rounded-full bg-surface-variant">
             <div
               className="h-full rounded-full bg-primary shadow-[0_0_10px_rgba(149,211,186,0.5)]"
@@ -136,14 +165,20 @@ export default function CanchaEquipo({ jugadores = [], presupuesto = 100 }) {
           <h2 className="mb-4 font-label-bold text-label-bold uppercase tracking-wider text-on-surface-variant">
             Presupuesto
           </h2>
+
           <div className="space-y-3 font-body-md text-body-md">
             <div className="flex items-center justify-between">
               <span className="text-on-surface-variant">Usado</span>
-              <strong className="text-on-surface">{formatMoney(valorEquipo)}</strong>
+              <strong className="text-on-surface">
+                {formatMoney(valorEquipo)}
+              </strong>
             </div>
+
             <div className="flex items-center justify-between">
               <span className="text-on-surface-variant">Libre</span>
-              <strong className="text-primary">{formatMoney(presupuestoLibre)}</strong>
+              <strong className="text-primary">
+                {formatMoney(presupuestoLibre)}
+              </strong>
             </div>
           </div>
         </div>
@@ -166,6 +201,7 @@ export default function CanchaEquipo({ jugadores = [], presupuesto = 100 }) {
                   <span className="min-w-0 truncate font-semibold text-on-surface">
                     {nombre}
                   </span>
+
                   <span
                     className={`shrink-0 rounded px-2 py-1 text-[9px] font-bold leading-none ${
                       badgeClass[slot.position]

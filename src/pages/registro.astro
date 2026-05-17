@@ -105,13 +105,12 @@ import "../styles/tailwind.css";
 
      
             <!-- button -->
-            <a
-              href="/validar"
-              type="submit"
-              class="w-full rounded-2xl bg-primary px-6 py-4 font-display text-lg font-bold uppercase text-black transition hover:scale-[1.01] hover:shadow-glow"
-            >
-              Crear cuenta
-            </a>
+            <button
+                type="submit"
+                class="w-full rounded-2xl bg-primary px-6 py-4 font-display text-lg font-bold uppercase text-black transition hover:scale-[1.01] hover:shadow-glow"
+              >
+                Crear cuenta
+            </button>
 
             <!-- login -->
             <div class="pt-2 text-center">
@@ -158,7 +157,11 @@ import "../styles/tailwind.css";
 
       const data = await response.json();
 
-      console.log(data);
+        if (response.ok) {
+          window.location.href = "/dashboard";
+        } else {
+          alert(data.error);
+}
     }
 
     window.handleSubmit = handleSubmit;

@@ -1,17 +1,253 @@
 ---
-
+import "../styles/tailwind.css";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<html lang="es" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mundial Fantasy</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lexend:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="min-h-screen overflow-x-hidden bg-background bg-stadium text-text">
+    <header class="mx-auto flex max-w-container items-center justify-between px-6 py-6">
+      <h1 class="font-display text-2xl font-extrabold uppercase text-primary">
+        Mundial Fantasy
+      </h1>
+
+      <div class="flex items-center gap-4">
+        <a href="/login" class="font-semibold text-textMuted transition hover:text-primary">
+          Login
+        </a>
+
+        <a
+          href="/registro"
+          class="rounded-xl bg-primary px-5 py-3 font-display text-sm font-bold uppercase text-black transition hover:shadow-glow"
+        >
+          Registrarse
+        </a>
+      </div>
+    </header>
+	<main class="mx-auto flex min-h-[80vh] max-w-container items-center justify-center px-6 text-center">
+  		<div class="flex max-w-4xl flex-col items-center">
+        <p class="mb-4 font-display text-sm font-bold uppercase tracking-[0.3em] text-accent">
+          Fantasy del Mundial
+        </p>
+
+        <h2 class="max-w-5xl text-center font-display text-5xl font-extrabold uppercase italic tracking-tight text-primary md:text-7xl">
+          Armá tu equipo ideal
+        </h2>
+
+        <p class="mt-6 max-w-3xl text-center text-lg text-textMuted">
+          Compra jugadores reales del Mundial, administra tu presupuesto,
+          arma titulares y suplentes y compite contra otros usuarios.
+        </p>
+
+        <div class="mt-10 flex gap-4">
+          <a
+            href="/registro"
+            class="rounded-2xl bg-primary px-8 py-4 text-center font-display text-lg font-bold uppercase text-black transition hover:scale-[1.01] hover:shadow-glow"
+          >
+            Empezar
+          </a>
+
+          <a
+            href="/login"
+            class="rounded-2xl border border-outline bg-surface/60 px-8 py-4 text-center font-display text-lg font-bold uppercase text-text transition hover:border-primary"
+          >
+            Ingresar
+          </a>
+        </div>
+      </div>
+    </main>
+	<section class="mx-auto max-w-container px-6 pb-24">
+		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+
+			<!-- CARD 1 -->
+			<div class="rounded-3xl border border-white/10 bg-surface/40 p-8 backdrop-blur-xl">
+			<div class="mb-6 flex h-16 w-16 items-center justify-center rounded-xl border border-primary/30 bg-primary/10">
+				<span class="text-3xl text-primary">⚽</span>
+			</div>
+
+			<h3 class="font-display text-3xl font-extrabold uppercase text-text">
+				Armá tu equipo
+			</h3>
+
+			<p class="mt-5 text-base leading-relaxed text-textMuted">
+				Crea tu plantilla ideal con titulares y suplentes usando jugadores reales del Mundial.
+			</p>
+			</div>
+
+			<!-- CARD 2 -->
+			<div class="rounded-3xl border border-white/10 bg-surface/40 p-8 backdrop-blur-xl">
+			<div class="mb-6 flex h-16 w-16 items-center justify-center rounded-xl border border-primary/30 bg-primary/10">
+				<span class="text-3xl text-primary">💰</span>
+			</div>
+
+			<h3 class="font-display text-3xl font-extrabold uppercase text-text">
+				Comprá jugadores
+			</h3>
+
+			<p class="mt-5 text-base leading-relaxed text-textMuted">
+				Usá tu presupuesto para fichar estrellas y mejorar tu fantasy team.
+			</p>
+			</div>
+
+			<!-- CARD 3 -->
+			<div class="rounded-3xl border border-white/10 bg-surface/40 p-8 backdrop-blur-xl">
+			<div class="mb-6 flex h-16 w-16 items-center justify-center rounded-xl border border-primary/30 bg-primary/10">
+				<span class="text-3xl text-primary">🏆</span>
+			</div>
+
+			<h3 class="font-display text-3xl font-extrabold uppercase text-text">
+				Enfrentá usuarios
+			</h3>
+
+			<p class="mt-5 text-base leading-relaxed text-textMuted">
+				Compará tu equipo con otros jugadores y demuestrales quién tiene el mejor plantel.
+			</p>
+			</div>
+
+			<!-- CARD 4 -->
+			<div class="rounded-3xl border border-white/10 bg-surface/40 p-8 backdrop-blur-xl">
+			<div class="mb-6 flex h-16 w-16 items-center justify-center rounded-xl border border-primary/30 bg-primary/10">
+				<span class="text-3xl text-primary">📈</span>
+			</div>
+
+			<h3 class="font-display text-3xl font-extrabold uppercase text-text">
+				Mejorá tu mercado
+			</h3>
+
+			<p class="mt-5 text-base leading-relaxed text-textMuted">
+				Analiza el rendimiento de los jugadores y realiza mejores fichajes durante el torneo.
+			</p>
+			</div>
+
+		</div>
+	</section>
+	<section class="mx-auto max-w-container px-6 pb-24">
+		<div class="mb-10">
+			<p class="font-display text-sm font-bold uppercase tracking-[0.3em] text-primary">
+			Jugadores destacados
+			</p>
+
+			<h2 class="mt-3 font-display text-4xl font-extrabold uppercase italic text-text">
+			Cartas del mercado
+			</h2>
+		</div>
+
+		<div class="flex items-center gap-6">
+			<button
+			id="prevPlayers"
+			type="button"
+			class="rounded-2xl border border-outline bg-surface/60 px-5 py-4 font-display text-2xl font-bold text-primary transition hover:border-primary hover:shadow-glow"
+			>
+			←
+			</button>
+
+			<div id="playersGrid" class="grid flex-1 gap-6 md:grid-cols-2 lg:grid-cols-4"></div>
+
+			<button
+			id="nextPlayers"
+			type="button"
+			class="rounded-2xl border border-outline bg-surface/60 px-5 py-4 font-display text-2xl font-bold text-primary transition hover:border-primary hover:shadow-glow"
+			>
+			→
+			</button>
+		</div>
+		</section>
+
+		<script is:inline>
+		let allPlayers = [];
+		let currentIndex = 0;
+
+		async function loadPlayers() {
+			const response = await fetch("/api/jugadores");
+			const result = await response.json();
+
+			allPlayers = result.data || [];
+			renderPlayers();
+		}
+
+		function getVisiblePlayers() {
+			const visible = [];
+
+			for (let i = 0; i < 4; i++) {
+			const index = (currentIndex + i) % allPlayers.length;
+			visible.push(allPlayers[index]);
+			}
+
+			return visible;
+		}
+
+		function renderPlayers() {
+			const grid = document.getElementById("playersGrid");
+
+			if (!allPlayers.length) {
+			grid.innerHTML = "";
+			return;
+			}
+
+			grid.innerHTML = getVisiblePlayers().map((player) => `
+			<article class="rounded-2xl border border-white/10 bg-surface/60 p-4 backdrop-blur-xl transition hover:border-primary hover:scale-[1.02] hover:shadow-glow">
+				<div class="relative h-72 overflow-hidden rounded-xl bg-background">
+				<img src="${player.imagen_url}" alt="${player.nombre}" class="h-full w-full object-cover" />
+
+				<div class="absolute left-3 top-3 rounded bg-primary px-3 py-1 font-display text-sm font-bold uppercase text-black">
+					${player.posicion}
+				</div>
+
+				<div class="absolute right-3 bottom-3 rounded bg-accent px-3 py-2 font-display text-xl font-bold text-black">
+					$${player.precio}M
+				</div>
+				</div>
+
+				<div class="mt-4">
+				<h3 class="font-display text-2xl font-extrabold uppercase text-text">
+					${player.nombre}
+				</h3>
+
+				<p class="mt-1 text-sm uppercase text-textMuted">
+					${player.nacionalidad}
+				</p>
+
+				<div class="mt-4 flex gap-6 text-sm">
+					<div>
+					<p class="uppercase text-textMuted">Goles</p>
+					<p class="font-bold text-text">${player.goles}</p>
+					</div>
+
+					<div>
+					<p class="uppercase text-textMuted">Asist.</p>
+					<p class="font-bold text-text">${player.asistencias}</p>
+					</div>
+
+					<div>
+					<p class="uppercase text-textMuted">Edad</p>
+					<p class="font-bold text-text">${player.edad}</p>
+					</div>
+				</div>
+				</div>
+			</article>
+			`).join("");
+		}
+
+		document.getElementById("nextPlayers").addEventListener("click", () => {
+			currentIndex = (currentIndex + 1) % allPlayers.length;
+			renderPlayers();
+		});
+
+		document.getElementById("prevPlayers").addEventListener("click", () => {
+			currentIndex = (currentIndex - 1 + allPlayers.length) % allPlayers.length;
+			renderPlayers();
+		});
+
+		loadPlayers();
+	</script>
+  </body>
 </html>
