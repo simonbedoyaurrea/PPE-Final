@@ -95,40 +95,40 @@ import "../styles/tailwind.css";
   </body>
 
   <script is:inline>
-        async function handleSubmit(event) {
-        event.preventDefault();
+    async function handleSubmit(event) {
+      event.preventDefault();
 
-        const formData = new FormData(event.target);
+      const formData = new FormData(event.target);
 
-        const email = formData.get("email");
-        const password = formData.get("password");
-        
+      const email = formData.get("email");
+      const password = formData.get("password");
 
-        const response = await fetch("/api/login", {
-            method: "POST",
-            headers: {  
-            "Content-Type": "application/json",
-            },
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
 
-            body: JSON.stringify({
-            email,
-            password,
-            }),
-        });
+      const data = await response.json();
 
-        const data = await response.json();
+      if (!response.ok) {
+        console.error("❌ Error en login:", data.error);
+        alert(data.error || "Email o contraseña incorrectos");
+        return;
+      }
 
-        if (response.ok) {
-          console.log("✅ Login exitoso");
-          console.log("📋 Datos del usuario:", data.user);
-          console.log("🔐 Session:", data.session);
-          
-          // Redirigir a dashboard
-          window.location.href = "/dashboard";
-        } else {
-          console.error("❌ Error en login:", data.error);
-        }
-        }
-        window.handleSubmit = handleSubmit;
-    </script>
+      console.log("✅ Login exitoso");
+      console.log("📋 Datos del usuario:", data.user);
+      console.log("🔐 Session:", data.session);
+
+      window.location.href = "/dashboard";
+    }
+
+    window.handleSubmit = handleSubmit;
+  </script>
 </html>

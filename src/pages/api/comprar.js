@@ -1,39 +1,110 @@
 import { supabase } from "../lib/supabase";
 
+
+
 export const prerender = false;
+
+const limitesPorPosicion = {
+  DEL: 3,
+  MED: 3,
+  DEF: 4,
+  POR: 1,
+
+  // Por si en tu base tienes posiciones en texto completo
+  Delantero: 3,
+  Mediocampista: 3,
+  Defensa: 4,
+  Portero: 1,
+  Arquero: 1,
+
+  // Por si usas nombres en inglés en algún componente
+  FWD: 3,
+  MID: 3,
+  GK: 1,
+};
+
+function jsonResponse(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}
+
+function normalizarPosicion(posicion) {
+  const mapa = {
+    Delantero: "DEL",
+    FWD: "DEL",
+    DEL: "DEL",
+
+    Mediocampista: "MED",
+    MID: "MED",
+    MED: "MED",
+
+    Defensa: "DEF",
+    DEF: "DEF",
+
+    Portero: "POR",
+    Arquero: "POR",
+    GK: "POR",
+    POR: "POR",
+  };
+
+  return mapa[posicion] ?? posicion;
+}
+
+function obtenerLimite(posicion) {
+  const posicionNormalizada = normalizarPosicion(posicion);
+
+  const limites = {
+    DEL: 3,
+    MED: 3,
+    DEF: 4,
+    POR: 1,
+  };
+
+  return limites[posicionNormalizada];
+}
 
 export async function POST({ request, cookies }) {
   try {
     const { jugadorId } = await request.json();
 
-    // obtener token
-    const token = cookies.get("sb-access-token")?.value;
-
-    if (!token) {
-      return new Response(
-        JSON.stringify({
-          error: "No autenticado",
-        }),
-        { status: 401, headers: { "Content-Type": "application/json" } },
+    if (!jugadorId) {
+      return jsonResponse(
+        {
+          error: "Falta el ID del jugador",
+        },
+        400
       );
     }
 
-    // obtener usuario autenticado
+    const token = cookies.get("sb-access-token")?.value;
+
+    if (!token) {
+      return jsonResponse(
+        {
+          error: "No autenticado",
+        },
+        401
+      );
+    }
+
     const {
       data: { user },
       error: userError,
     } = await supabase.auth.getUser(token);
 
     if (userError || !user) {
-      return new Response(
-        JSON.stringify({
+      return jsonResponse(
+        {
           error: "Usuario inválido",
-        }),
-        { status: 401, headers: { "Content-Type": "application/json" } },
+        },
+        401
       );
     }
 
-    // obtener perfil
     const { data: perfil, error: perfilError } = await supabase
       .from("perfil")
       .select("saldo")
@@ -41,15 +112,14 @@ export async function POST({ request, cookies }) {
       .single();
 
     if (perfilError || !perfil) {
-      return new Response(
-        JSON.stringify({
+      return jsonResponse(
+        {
           error: "Perfil no encontrado",
-        }),
-        { status: 404, headers: { "Content-Type": "application/json" } },
+        },
+        404
       );
     }
 
-    // obtener jugador
     const { data: jugador, error: jugadorError } = await supabase
       .from("jugadores")
       .select("*")
@@ -57,42 +127,101 @@ export async function POST({ request, cookies }) {
       .single();
 
     if (jugadorError || !jugador) {
-      return new Response(
-        JSON.stringify({
+      return jsonResponse(
+        {
           error: "Jugador no encontrado",
-        }),
-        { status: 404, headers: { "Content-Type": "application/json" } },
+        },
+        404
       );
     }
 
-    // validar saldo
-    if (perfil.saldo < jugador.precio) {
-      return new Response(
-        JSON.stringify({
+    const posicionJugador = normalizarPosicion(jugador.posicion);
+    const limitePosicion = obtenerLimite(jugador.posicion);
+
+    if (!limitePosicion) {
+      return jsonResponse(
+        {
+          error: `La posición ${jugador.posicion} no es válida`,
+        },
+        400
+      );
+    }
+
+    if (Number(perfil.saldo) < Number(jugador.precio)) {
+      return jsonResponse(
+        {
           error: "Saldo insuficiente",
-        }),
-        { status: 400, headers: { "Content-Type": "application/json" } },
+        },
+        400
       );
     }
 
-    // validar si ya existe
-    const { data: existe } = await supabase
+    const { data: existe, error: existeError } = await supabase
       .from("usuario_jugadores")
       .select("id")
       .eq("id_usuario", user.id)
       .eq("id_jugador", jugadorId)
       .maybeSingle();
 
-    if (existe) {
-      return new Response(
-        JSON.stringify({
-          error: "Ya tienes este jugador",
-        }),
-        { status: 400, headers: { "Content-Type": "application/json" } },
+    if (existeError) {
+      return jsonResponse(
+        {
+          error: existeError.message,
+        },
+        500
       );
     }
 
-    // insertar
+    if (existe) {
+      return jsonResponse(
+        {
+          error: "Ya tienes este jugador",
+        },
+        400
+      );
+    }
+
+    const { data: comprasUsuario, error: comprasError } = await supabase
+      .from("usuario_jugadores")
+      .select(`
+        id,
+        jugadores (
+          id,
+          posicion
+        )
+      `)
+      .eq("id_usuario", user.id);
+
+    if (comprasError) {
+      return jsonResponse(
+        {
+          error: comprasError.message,
+        },
+        500
+      );
+    }
+
+    const comprasMismaPosicion = (comprasUsuario ?? []).filter((compra) => {
+      const jugadorComprado = Array.isArray(compra.jugadores)
+        ? compra.jugadores[0]
+        : compra.jugadores;
+
+      if (!jugadorComprado) {
+        return false;
+      }
+
+      return normalizarPosicion(jugadorComprado.posicion) === posicionJugador;
+    });
+
+    if (comprasMismaPosicion.length >= limitePosicion) {
+      return jsonResponse(
+        {
+          error: `Ya tienes el máximo de jugadores para la posición ${posicionJugador}`,
+        },
+        400
+      );
+    }
+
     const { error: insertError } = await supabase
       .from("usuario_jugadores")
       .insert({
@@ -101,16 +230,15 @@ export async function POST({ request, cookies }) {
       });
 
     if (insertError) {
-      return new Response(
-        JSON.stringify({
+      return jsonResponse(
+        {
           error: insertError.message,
-        }),
-        { status: 500, headers: { "Content-Type": "application/json" } },
+        },
+        500
       );
     }
 
-    // actualizar saldo
-    const nuevoBalance = perfil.saldo - jugador.precio;
+    const nuevoBalance = Number(perfil.saldo) - Number(jugador.precio);
 
     const { error: updateError } = await supabase
       .from("perfil")
@@ -120,27 +248,34 @@ export async function POST({ request, cookies }) {
       .eq("id", user.id);
 
     if (updateError) {
-      return new Response(
-        JSON.stringify({
+      return jsonResponse(
+        {
           error: updateError.message,
-        }),
-        { status: 500, headers: { "Content-Type": "application/json" } },
+        },
+        500
       );
     }
 
-    return new Response(
-      JSON.stringify({
+    return jsonResponse(
+      {
         success: true,
+        mensaje: "Jugador comprado correctamente",
+        jugador: {
+          id: jugador.id,
+          nombre: jugador.nombre,
+          posicion: posicionJugador,
+          precio: jugador.precio,
+        },
         nuevoBalance,
-      }),
-      { status: 200, headers: { "Content-Type": "application/json" } },
+      },
+      200
     );
   } catch (error) {
-    return new Response(
-      JSON.stringify({
-        error: error.message,
-      }),
-      { status: 500, headers: { "Content-Type": "application/json" } },
+    return jsonResponse(
+      {
+        error: error.message || "Error interno del servidor",
+      },
+      500
     );
   }
 }

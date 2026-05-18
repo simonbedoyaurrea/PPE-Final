@@ -1,5 +1,8 @@
 ---
 import "../styles/tailwind.css";
+
+
+
 ---
 
 <html lang="en" class="dark">
@@ -104,25 +107,17 @@ import "../styles/tailwind.css";
             </div>
 
      
-            <!-- button -->
-            <button
-                type="submit"
-                class="w-full rounded-2xl bg-primary px-6 py-4 font-display text-lg font-bold uppercase text-black transition hover:scale-[1.01] hover:shadow-glow"
-              >
-                Crear cuenta
-            </button>
 
             <!-- login -->
             <div class="pt-2 text-center">
               <p class="text-sm text-textMuted">
                 Tienes cuenta?
-
-                <a
-                  href="/login"
-                  class="font-semibold text-accent transition hover:opacity-80"
-                >
-                  Iniciar sesion
-                </a>
+                  <button
+                    type="submit"
+                    class="w-full rounded-2xl bg-primary px-6 py-4 font-display text-lg font-bold uppercase text-black transition hover:scale-[1.01] hover:shadow-glow"
+                  >
+                    Crear cuenta
+                  </button>
               </p>
             </div>
           </form>
@@ -130,40 +125,40 @@ import "../styles/tailwind.css";
       </section>
     </main>
   </body>
-  <script is:inline>
-    async function handleSubmit(event) {
-      event.preventDefault();
+ <script is:inline>
+  async function handleSubmit(event) {
+    event.preventDefault();
 
-      const formData = new FormData(event.target);
+    const formData = new FormData(event.target);
 
-      const email = formData.get("email");
-      const password = formData.get("password");
-      const name = formData.get("name");
-      const teamName = formData.get("teamName");
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const name = formData.get("name");
+    const teamName = formData.get("teamName");
 
-      const response = await fetch("/api/registro", {
-        method: "POST",
-        headers: {  
-          "Content-Type": "application/json",
-        },
+    const response = await fetch("/api/registro", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+        name,
+        teamName,
+      }),
+    });
 
-        body: JSON.stringify({
-          email,
-          password,
-          name,
-          teamName,
-        }),
-      });
+    const data = await response.json();
 
-      const data = await response.json();
-
-        if (response.ok) {
-          window.location.href = "/dashboard";
-        } else {
-          alert(data.error);
-}
+    if (!response.ok) {
+      alert(data.error || "Error al crear la cuenta");
+      return;
     }
 
-    window.handleSubmit = handleSubmit;
+    window.location.href = "/dashboard";
+  }
+
+  window.handleSubmit = handleSubmit;
 </script>
 </html>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Card from "./Card";
 import Filtros from "./Filtros";
 import BarraBusqueda from "./BarraBusqueda";
@@ -10,29 +10,76 @@ export default function Mercado({ jugadores, nacionalidades }) {
   const [filtroNacionalidad, setFiltroNacionalidad] = useState(null);
   const [busqueda, setBusqueda] = useState("");
 
+  const [jugadoresComprados, setJugadoresComprados] = useState([]);
+  const [loadingComprados, setLoadingComprados] = useState(true);
+
+  useEffect(() => {
+    async function cargarJugadoresComprados() {
+      try {
+        const response = await fetch("/api/mis_jugadores", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          console.error("Error cargando jugadores comprados:", data.error);
+          return;
+        }
+
+        setJugadoresComprados(data.jugadoresComprados || []);
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setLoadingComprados(false);
+      }
+    }
+
+    cargarJugadoresComprados();
+  }, []);
+
+  const idsComprados = useMemo(() => {
+    return jugadoresComprados.map((item) => item.id_jugador);
+  }, [jugadoresComprados]);
+
   const comprarJugador = async (jugadorId) => {
     const response = await fetch("/api/comprar", {
       method: "POST",
-
       credentials: "include",
-
       headers: {
         "Content-Type": "application/json",
       },
-
       body: JSON.stringify({
         jugadorId,
       }),
     });
+
     const data = await response.json();
 
-    console.log(data);
+    if (!response.ok) {
+      alert(data.error || "Error al comprar jugador");
+      return;
+    }
+
+    alert("Jugador comprado correctamente");
+
+    const jugadorComprado = jugadores.find((j) => j.id === jugadorId);
+
+    if (jugadorComprado) {
+      setJugadoresComprados((prev) => [
+        ...prev,
+        {
+          id_jugador: jugadorId,
+          jugadores: jugadorComprado,
+        },
+      ]);
+    }
   };
 
   const fuse = useMemo(() => {
     return new Fuse(jugadores, {
       keys: ["nombre", "club", "nacionalidad"],
-
       threshold: 0.3,
     });
   }, [jugadores]);
@@ -40,24 +87,20 @@ export default function Mercado({ jugadores, nacionalidades }) {
   const jugadoresFiltrados = useMemo(() => {
     let resultado = jugadores;
 
-    // SEARCH
     if (busqueda.trim()) {
       resultado = fuse.search(busqueda).map((r) => r.item);
     }
 
-    // POSITION
     if (filtroPosicion) {
       resultado = resultado.filter((j) => j.posicion === filtroPosicion);
     }
 
-    // NATIONALITY
     if (filtroNacionalidad) {
       resultado = resultado.filter(
-        (j) => j.nacionalidad === filtroNacionalidad,
+        (j) => j.nacionalidad === filtroNacionalidad
       );
     }
 
-    // PRICE
     if (filtroPrecio) {
       resultado = resultado.filter((j) => j.precio <= filtroPrecio);
     }
@@ -74,8 +117,8 @@ export default function Mercado({ jugadores, nacionalidades }) {
 
   return (
     <>
-      <div class="flex-1 px-4 md:px-margin py-margin pb-32 md:pb-margin">
-        <div class="max-w-container-max mx-auto flex flex-col lg:flex-row gap-margin">
+      <div className="flex-1 px-4 md:px-margin py-margin pb-32 md:pb-margin">
+        <div className="max-w-container-max mx-auto flex flex-col lg:flex-row gap-margin">
           <Filtros
             filtroPosicion={filtroPosicion}
             setFiltroPosicion={setFiltroPosicion}
@@ -86,21 +129,24 @@ export default function Mercado({ jugadores, nacionalidades }) {
             nacionalidades={nacionalidades}
           />
 
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center justify-between mb-6 pb-2 border-b border-outline-variant/20">
-              <span class="font-body-md text-body-md text-on-surface-variant">
-                Showing
-                <strong class="text-on-surface"> 248 </strong>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between mb-6 pb-2 border-b border-outline-variant/20">
+              <span className="font-body-md text-body-md text-on-surface-variant">
+                Showing{" "}
+                <strong className="text-on-surface">
+                  {jugadoresFiltrados.length}
+                </strong>{" "}
                 players
               </span>
 
               <BarraBusqueda busqueda={busqueda} setBusqueda={setBusqueda} />
-              <div class="flex items-center gap-2">
-                <span class="font-body-md text-body-md text-on-surface-variant hidden sm:inline">
+
+              <div className="flex items-center gap-2">
+                <span className="font-body-md text-body-md text-on-surface-variant hidden sm:inline">
                   Sort by:
                 </span>
 
-                <select class="bg-transparent border-none text-primary font-label-bold text-label-bold focus:ring-0 cursor-pointer">
+                <select className="bg-transparent border-none text-primary font-label-bold text-label-bold focus:ring-0 cursor-pointer">
                   <option>Highest Price</option>
                   <option>Total Points</option>
                   <option>Form</option>
@@ -108,20 +154,32 @@ export default function Mercado({ jugadores, nacionalidades }) {
               </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-gutter gap-y-12 mt-8">
-              {jugadoresFiltrados.map((j) => (
-                <Card
-                  onCompra={comprarJugador}
-                  price={j.precio}
-                  age={j.edad}
-                  name={j.nombre}
-                  position={j.posicion}
-                  club={j.club}
-                  flag={j.nacionalidad}
-                  image={j.imagen_url}
-                  id={j.id}
-                />
-              ))}
+            {loadingComprados && (
+              <p className="mb-6 text-on-surface-variant">
+                Cargando tus jugadores comprados...
+              </p>
+            )}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-gutter gap-y-12 mt-8">
+              {jugadoresFiltrados.map((j) => {
+                const comprado = idsComprados.includes(j.id);
+
+                return (
+                  <Card
+                    key={j.id}
+                    onCompra={comprarJugador}
+                    comprado={comprado}
+                    price={j.precio}
+                    age={j.edad}
+                    name={j.nombre}
+                    position={j.posicion}
+                    club={j.club}
+                    flag={j.nacionalidad}
+                    image={j.imagen_url}
+                    id={j.id}
+                  />
+                );
+              })}
             </div>
           </div>
         </div>
