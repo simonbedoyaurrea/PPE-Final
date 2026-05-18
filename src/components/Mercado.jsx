@@ -140,18 +140,6 @@ export default function Mercado({ jugadores, nacionalidades }) {
               </span>
 
               <BarraBusqueda busqueda={busqueda} setBusqueda={setBusqueda} />
-
-              <div className="flex items-center gap-2">
-                <span className="font-body-md text-body-md text-on-surface-variant hidden sm:inline">
-                  Sort by:
-                </span>
-
-                <select className="bg-transparent border-none text-primary font-label-bold text-label-bold focus:ring-0 cursor-pointer">
-                  <option>Highest Price</option>
-                  <option>Total Points</option>
-                  <option>Form</option>
-                </select>
-              </div>
             </div>
 
             {loadingComprados && (

@@ -10,81 +10,80 @@ export default function Filtros({
   const nacionalidadesUnicas = [
     ...new Set(nacionalidades.map((j) => j.nacionalidad)),
   ];
+
+  const posiciones = [
+    { label: "TODAS", value: "" },
+    { label: "POR", value: "Portero" },
+    { label: "DEF", value: "Defensa" },
+    { label: "MED", value: "Mediocampista" },
+    { label: "DEL", value: "Delantero" },
+  ];
+
+  const resetFiltros = () => {
+    setFiltroPosicion("");
+    setFiltroNacionalidad(null);
+    setFiltroPrecio(null);
+  };
+
   return (
-    <aside class="w-full lg:w-72 shrink-0 self-start sticky top-24">
-      <div class="bg-surface-variant/30 backdrop-blur-xl border border-outline-variant/20 rounded-2xl p-margin shadow-[0_8px_32px_rgba(0,0,0,0.3)] max-h-[calc(100vh-7rem)] overflow-y-auto">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">tune</span>
+    <aside className="w-full lg:w-72 shrink-0 self-start sticky top-24">
+      <div className="bg-surface-variant/30 backdrop-blur-xl border border-outline-variant/20 rounded-2xl p-margin shadow-[0_8px_32px_rgba(0,0,0,0.3)] max-h-[calc(100vh-7rem)] overflow-y-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+            <span className="text-primary">☰</span>
             Filtros
           </h3>
 
-          <button class="font-label-bold text-label-bold text-on-surface-variant hover:text-primary transition-colors">
+          <button
+            onClick={resetFiltros}
+            className="font-label-bold text-label-bold text-on-surface-variant hover:text-primary transition-colors"
+          >
             RESET
           </button>
         </div>
 
-        <div class="mb-8">
-          <label class="font-label-bold text-label-bold text-on-surface-variant block mb-3 uppercase tracking-widest">
-            Posicion
+        <div className="mb-8">
+          <label className="font-label-bold text-label-bold text-on-surface-variant block mb-3 uppercase tracking-widest">
+            Posición
           </label>
 
-          <div class="grid grid-cols-2 gap-2">
-            <button
-              onClick={() => setFiltroPosicion("")}
-              class="bg-surface-container-highest border border-outline-variant/40 hover:border-primary text-on-surface py-2 rounded-lg skew-x-[-5deg] hover:skew-x-[0deg] transition-all flex justify-center items-center group"
-            >
-              <span class="skew-x-[5deg] font-label-bold text-label-bold group-hover:text-primary">
-                TODAS
-              </span>
-            </button>
-            <button
-              onClick={() => setFiltroPosicion("Portero")}
-              class="bg-surface-container-highest border border-outline-variant/40 hover:border-primary text-on-surface py-2 rounded-lg skew-x-[-5deg] hover:skew-x-[0deg] transition-all flex justify-center items-center group"
-            >
-              <span class="skew-x-[5deg] font-label-bold text-label-bold group-hover:text-primary">
-                POR
-              </span>
-            </button>
+          <div className="grid grid-cols-2 gap-2">
+            {posiciones.map((posicion) => {
+              const activo = filtroPosicion === posicion.value;
 
-            <button
-              onClick={() => setFiltroPosicion("Defensa")}
-              class="bg-primary/20 border border-primary text-primary py-2 rounded-lg skew-x-[-5deg] hover:skew-x-0 transition-all flex justify-center items-center shadow-[inset_0_0_10px_rgba(149,211,186,0.2)]"
-            >
-              <span class="skew-x-[5deg] font-label-bold text-label-bold">
-                DEF
-              </span>
-            </button>
-
-            <button
-              onClick={() => setFiltroPosicion("Mediocampista")}
-              class="bg-surface-container-highest border border-outline-variant/40 hover:border-primary text-on-surface py-2 rounded-lg skew-x-[-5deg] hover:skew-x-[0deg] transition-all flex justify-center items-center group"
-            >
-              <span class="skew-x-[5deg] font-label-bold text-label-bold group-hover:text-primary">
-                MED
-              </span>
-            </button>
-
-            <button
-              onClick={() => setFiltroPosicion("Delantero")}
-              class="bg-surface-container-highest border border-outline-variant/40 hover:border-primary text-on-surface py-2 rounded-lg skew-x-[-5deg] hover:skew-x-[0deg] transition-all flex justify-center items-center group"
-            >
-              <span class="skew-x-[5deg] font-label-bold text-label-bold group-hover:text-primary">
-                DEL
-              </span>
-            </button>
+              return (
+                <button
+                  key={posicion.label}
+                  onClick={() => setFiltroPosicion(posicion.value)}
+                  className={`py-2 rounded-lg skew-x-[-5deg] transition-all flex justify-center items-center ${
+                    activo
+                      ? "bg-primary/20 border border-primary text-primary shadow-[inset_0_0_10px_rgba(149,211,186,0.2)]"
+                      : "bg-surface-container-highest border border-outline-variant/40 hover:border-primary text-on-surface"
+                  }`}
+                >
+                  <span
+                    className={`skew-x-[5deg] font-label-bold text-label-bold ${
+                      activo ? "text-primary" : "group-hover:text-primary"
+                    }`}
+                  >
+                    {posicion.label}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         <div>
-          <label class="font-label-bold text-label-bold text-on-surface-variant block mb-3 uppercase tracking-widest">
+          <label className="font-label-bold text-label-bold text-on-surface-variant block mb-3 uppercase tracking-widest">
             Nacionalidad
           </label>
 
-          <div class="relative">
+          <div className="relative">
             <select
               value={filtroNacionalidad || ""}
               onChange={(e) => setFiltroNacionalidad(e.target.value || null)}
+              className="w-full rounded-lg bg-surface-container-highest border border-outline-variant/40 px-4 py-3 text-on-surface outline-none focus:border-primary"
             >
               <option className="text-black" value="">
                 Todas
