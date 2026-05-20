@@ -15,20 +15,24 @@ export default function Card({
   const botonDesactivado = posicionLlena && !comprado;
 
   const posicionCorta =
-    position === "Portero"
+    position === "Portero" || position === "POR"
       ? "POR"
-      : position === "Defensa"
+      : position === "Defensa" || position === "DEF"
       ? "DEF"
-      : position === "Mediocampista"
+      : position === "Mediocampista" || position === "MED"
       ? "MED"
-      : position === "Delantero"
+      : position === "Delantero" || position === "DEL"
       ? "DEL"
       : position;
 
   return (
-    <div className="relative pt-14 pb-6 px-4 bg-surface-container-highest/40 backdrop-blur-md border border-outline-variant/30 rounded-[2rem_2rem_0.5rem_0.5rem] flex flex-col items-center shadow-xl">
-      <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-28 h-28 z-10">
-        <div className="w-full h-full rounded-full border-2 border-primary overflow-hidden bg-surface-container-lowest">
+    <article className="group relative overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container-highest/50 p-4 shadow-xl transition-all duration-200 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_18px_40px_rgba(0,0,0,0.35)]">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div className="rounded-lg border border-primary/40 bg-primary-container/20 px-3 py-1 font-label-bold text-label-bold text-primary">
+          {posicionCorta}
+        </div>
+
+        <div className="h-24 w-24 shrink-0 overflow-hidden rounded-full border-2 border-primary bg-surface-container-lowest shadow-lg">
           {image ? (
             <img
               alt={name}
@@ -43,23 +47,24 @@ export default function Card({
         </div>
       </div>
 
-      <div className="absolute top-3 left-4 text-center z-20">
-        <div className="font-label-bold text-label-bold text-primary mt-1">
-          {posicionCorta}
-        </div>
-      </div>
-
-      <h3 className="font-headline-md text-headline-md text-on-surface mt-2 uppercase tracking-wide text-center w-full truncate px-2">
+      <h3 className="min-h-[56px] font-headline-md text-2xl font-extrabold uppercase leading-tight text-on-surface">
         {name}
       </h3>
 
-      <p className="text-on-surface-variant text-sm mt-1">{club}</p>
-      <p className="text-on-surface-variant text-sm">{flag}</p>
-      <p className="text-on-surface-variant text-sm">{age} años</p>
+      <div className="mt-2 space-y-1 text-sm text-on-surface-variant">
+        <p className="truncate">{club || "Sin club"}</p>
+        <p className="uppercase">{flag || "N/A"}</p>
+        <p>{age ? `${age} años` : "Edad no registrada"}</p>
+      </div>
 
-      <div className="flex items-center justify-between w-full mt-6">
-        <div className="font-headline-md text-headline-md text-tertiary-fixed-dim">
-          ${price}M
+      <div className="mt-7 flex items-center justify-between gap-4 border-t border-outline-variant/20 pt-4">
+        <div>
+          <p className="text-xs uppercase tracking-widest text-on-surface-variant">
+            Precio
+          </p>
+          <p className="font-headline-md text-2xl font-extrabold text-tertiary-fixed-dim">
+            ${price}M
+          </p>
         </div>
 
         <button
@@ -81,10 +86,10 @@ export default function Card({
           }`}
         >
           <span className="skew-x-[5deg] block">
-            {comprado ? "VENDER" : posicionLlena ? "CUPO LLENO" : "BUY"}
+            {comprado ? "VENDER" : posicionLlena ? "CUPO LLENO" : "COMPRAR"}
           </span>
         </button>
       </div>
-    </div>
+    </article>
   );
 }

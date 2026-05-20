@@ -9,6 +9,7 @@ export default function Mercado({ jugadores, nacionalidades }) {
   const [filtroPrecio, setFiltroPrecio] = useState(null);
   const [filtroNacionalidad, setFiltroNacionalidad] = useState(null);
   const [busqueda, setBusqueda] = useState("");
+  const [orden, setOrden] = useState("precio-desc");
 
   const [jugadoresComprados, setJugadoresComprados] = useState([]);
   const [loadingComprados, setLoadingComprados] = useState(true);
@@ -43,6 +44,14 @@ export default function Mercado({ jugadores, nacionalidades }) {
     return jugadoresComprados.map((item) => item.id_jugador);
   }, [jugadoresComprados]);
 
+  const posicionCorta = (posicion) => {
+    if (posicion === "Portero" || posicion === "POR") return "POR";
+    if (posicion === "Defensa" || posicion === "DEF") return "DEF";
+    if (posicion === "Mediocampista" || posicion === "MED") return "MED";
+    if (posicion === "Delantero" || posicion === "DEL") return "DEL";
+    return posicion;
+  };
+
   const comprarJugador = async (jugadorId) => {
 
   const jugador = jugadores.find((j) => j.id === jugadorId);
@@ -52,7 +61,7 @@ export default function Mercado({ jugadores, nacionalidades }) {
     return;
   }
 
-  const posicion = jugador.posicion;
+  const posicion = posicionCorta(jugador.posicion);
   const cantidadActual = conteoPosiciones[posicion] || 0;
   const limite = limitesPorPosicion[posicion];
 
@@ -102,7 +111,7 @@ export default function Mercado({ jugadores, nacionalidades }) {
 
 function contarPorPosicion(jugadoresComprados) {
   return jugadoresComprados.reduce((contador, compra) => {
-    const posicion = compra.jugadores?.posicion || compra.posicion;
+    const posicion = posicionCorta(compra.jugadores?.posicion || compra.posicion);
 
     contador[posicion] = (contador[posicion] || 0) + 1;
 
@@ -113,7 +122,7 @@ const conteoPosiciones = contarPorPosicion(jugadoresComprados);
 
   const fuse = useMemo(() => {
     return new Fuse(jugadores, {
-      keys: ["nombre", "club", "nacionalidad"],
+      keys: ["nombre", "club", "nacionalidad", "posicion"],
       threshold: 0.3,
     });
   }, [jugadores]);
@@ -126,7 +135,7 @@ const conteoPosiciones = contarPorPosicion(jugadoresComprados);
     }
 
     if (filtroPosicion) {
-      resultado = resultado.filter((j) => j.posicion === filtroPosicion);
+      resultado = resultado.filter((j) => posicionCorta(j.posicion) === filtroPosicion);
     }
 
     if (filtroNacionalidad) {
@@ -139,7 +148,25 @@ const conteoPosiciones = contarPorPosicion(jugadoresComprados);
       resultado = resultado.filter((j) => j.precio <= filtroPrecio);
     }
 
-    return resultado;
+    const ordenado = [...resultado];
+
+    if (orden === "precio-desc") {
+      ordenado.sort((a, b) => Number(b.precio || 0) - Number(a.precio || 0));
+    }
+
+    if (orden === "precio-asc") {
+      ordenado.sort((a, b) => Number(a.precio || 0) - Number(b.precio || 0));
+    }
+
+    if (orden === "nombre-asc") {
+      ordenado.sort((a, b) => String(a.nombre || "").localeCompare(String(b.nombre || "")));
+    }
+
+    if (orden === "edad-asc") {
+      ordenado.sort((a, b) => Number(a.edad || 0) - Number(b.edad || 0));
+    }
+
+    return ordenado;
   }, [
     jugadores,
     busqueda,
@@ -147,6 +174,7 @@ const conteoPosiciones = contarPorPosicion(jugadoresComprados);
     filtroNacionalidad,
     filtroPrecio,
     fuse,
+    orden,
   ]);
 
   return (
@@ -166,24 +194,29 @@ const conteoPosiciones = contarPorPosicion(jugadoresComprados);
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-6 pb-2 border-b border-outline-variant/20">
               <span className="font-body-md text-body-md text-on-surface-variant">
-                Showing{" "}
+                Mostrando{" "}
                 <strong className="text-on-surface">
                   {jugadoresFiltrados.length}
                 </strong>{" "}
-                players
+                de {jugadores.length} jugadores
               </span>
 
               <BarraBusqueda busqueda={busqueda} setBusqueda={setBusqueda} />
 
               <div className="flex items-center gap-2">
                 <span className="font-body-md text-body-md text-on-surface-variant hidden sm:inline">
-                  Sort by:
+                  Ordenar:
                 </span>
 
-                <select className="bg-transparent border-none text-primary font-label-bold text-label-bold focus:ring-0 cursor-pointer">
-                  <option>Highest Price</option>
-                  <option>Total Points</option>
-                  <option>Form</option>
+                <select
+                  value={orden}
+                  onChange={(event) => setOrden(event.target.value)}
+                  className="bg-transparent border-none text-primary font-label-bold text-label-bold focus:ring-0 cursor-pointer"
+                >
+                  <option className="text-black" value="precio-desc">Mayor precio</option>
+                  <option className="text-black" value="precio-asc">Menor precio</option>
+                  <option className="text-black" value="nombre-asc">Nombre</option>
+                  <option className="text-black" value="edad-asc">Menor edad</option>
                 </select>
               </div>
             </div>
@@ -194,7 +227,7 @@ const conteoPosiciones = contarPorPosicion(jugadoresComprados);
               </p>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-gutter gap-y-12 mt-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-gutter gap-y-6 mt-8">
               {jugadoresFiltrados.map((j) => {
                 const comprado = idsComprados.includes(j.id);
 

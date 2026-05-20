@@ -1,7 +1,7 @@
 ---
 import CanchaEquipo from "../components/CanchaEquipo.jsx";
 import HomeLayout from "../layout/HomeLayout.astro";
-import { supabase } from "./lib/supabase";
+import { supabase } from "../lib/supabase";
 export const prerender = false;
 
 const token = Astro.cookies.get("sb-access-token")?.value;

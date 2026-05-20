@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { supabase } from "../lib/supabase";
+import { supabase } from "../../lib/supabase";
 
 export const prerender = false;
 

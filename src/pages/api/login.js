@@ -1,4 +1,5 @@
-import { supabase } from "../lib/supabase";
+import { supabase } from "../../lib/supabase";
+import { getSessionCookieOptions } from "../../lib/auth";
 
 export const prerender = false;
 
@@ -17,21 +18,17 @@ export async function POST({ request, cookies }) {
       });
     }
 
-    cookies.set("sb-access-token", data.session.access_token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: data.session.expires_in,
-    });
+    cookies.set(
+      "sb-access-token",
+      data.session.access_token,
+      getSessionCookieOptions(data.session.expires_in),
+    );
 
-    cookies.set("sb-refresh-token", data.session.refresh_token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: 604800,
-    });
+    cookies.set(
+      "sb-refresh-token",
+      data.session.refresh_token,
+      getSessionCookieOptions(604800),
+    );
 
     return new Response(
       JSON.stringify({

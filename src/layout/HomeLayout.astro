@@ -1,13 +1,11 @@
 ---
 import "../styles/tailwind.css";
-import { supabase } from "../pages/lib/supabase";
-import { getAdminSession } from "../pages/lib/adminAuth";
+import { getAdminSession } from "../lib/adminAuth";
 
 const { title = "World Cup Fantasy", active = "mercado" } = Astro.props;
 const adminSession = await getAdminSession(Astro.cookies);
 
 const navItems = [
-  { href: "/dashboard", icon: "dashboard", label: "Dashboard", key: "dashboard" },
   { href: "/dashboard", icon: "storefront", label: "Mercado", key: "mercado" },
   { href: "/equipo", icon: "groups", label: "Equipo", key: "equipo" },
   ...(adminSession.isAdmin

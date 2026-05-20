@@ -1,7 +1,7 @@
 ---
 import HomeLayout from "../../layout/HomeLayout.astro";
-import { getAdminSession } from "../lib/adminAuth";
-import { supabase } from "../lib/supabase";
+import { getAdminSession } from "../../lib/adminAuth";
+import { supabase } from "../../lib/supabase";
 
 export const prerender = false;
 
@@ -21,9 +21,15 @@ const { data, error } = await supabase
   .order("nombre", { ascending: true });
 
 const jugadores = data ?? [];
-const posiciones = [...new Set(jugadores.map((j) => j.posicion).filter(Boolean))];
+const posicionesBase = ["Portero", "Defensa", "Mediocampista", "Delantero"];
+const posiciones = [
+  ...new Set([
+    ...posicionesBase,
+    ...jugadores.map((jugador) => jugador.posicion).filter(Boolean),
+  ]),
+];
 const nacionalidades = [
-  ...new Set(jugadores.map((j) => j.nacionalidad).filter(Boolean)),
+  ...new Set(jugadores.map((jugador) => jugador.nacionalidad).filter(Boolean)),
 ];
 
 const precioTotal = jugadores.reduce(
@@ -33,29 +39,54 @@ const precioTotal = jugadores.reduce(
 
 const mostrar = (valor, fallback = "-") =>
   valor === null || valor === undefined || valor === "" ? fallback : valor;
+
+const playerPayload = (jugador) =>
+  JSON.stringify({
+    id: jugador.id,
+    nombre: jugador.nombre ?? "",
+    posicion: jugador.posicion ?? "",
+    club: jugador.club ?? "",
+    nacionalidad: jugador.nacionalidad ?? "",
+    edad: jugador.edad ?? 0,
+    precio: jugador.precio ?? 0,
+    goles: jugador.goles ?? 0,
+    asistencias: jugador.asistencias ?? 0,
+    imagen_url: jugador.imagen_url ?? "",
+  });
 ---
 
 <HomeLayout title="Admin | World Cup Fantasy" active="admin">
   <section class="flex-1 px-4 py-margin pb-32 md:px-margin md:pb-margin">
     <div class="mx-auto flex max-w-container-max flex-col gap-margin">
-      <header class="flex flex-col gap-5 border-b border-outline-variant/20 pb-6 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p class="mb-2 font-label-bold text-label-bold uppercase tracking-wider text-primary">
-            Administracion
-          </p>
+      <header class="border-b border-outline-variant/20 pb-6">
+        <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p class="mb-2 font-label-bold text-label-bold uppercase tracking-wider text-primary">
+              Administracion
+            </p>
 
-          <h1 class="font-headline-xl text-4xl font-extrabold uppercase italic leading-tight text-primary md:text-headline-xl">
-            Jugadores
-          </h1>
+            <h1 class="font-headline-xl text-4xl font-extrabold uppercase italic leading-tight text-primary md:text-headline-xl">
+              CRUD de jugadores
+            </h1>
 
-          <p class="mt-3 max-w-2xl font-body-lg text-body-lg text-on-surface-variant">
-            Vista general de todos los jugadores guardados en la tabla de Supabase.
-          </p>
+            <p class="mt-3 max-w-3xl font-body-lg text-body-lg text-on-surface-variant">
+              Crea, edita y elimina jugadores del mercado fantasy. Los cambios se guardan en Supabase.
+            </p>
+          </div>
+
+          <a
+            class="inline-flex items-center justify-center gap-2 rounded-lg border border-outline-variant/40 bg-surface-container-high px-5 py-3 font-label-bold text-label-bold text-on-surface transition hover:border-primary hover:text-primary"
+            href="/api/admin/debug"
+            target="_blank"
+          >
+            <span class="material-symbols-outlined">bug_report</span>
+            Debug admin
+          </a>
         </div>
 
-        <div class="grid grid-cols-3 gap-3 sm:min-w-[420px]">
+        <div class="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <div class="rounded-lg border border-outline-variant/20 bg-surface-container/60 p-4">
-            <p class="text-xs uppercase tracking-wider text-on-surface-variant">Total</p>
+            <p class="text-xs uppercase tracking-wider text-on-surface-variant">Jugadores</p>
             <p class="mt-1 font-headline-md text-2xl text-primary">{jugadores.length}</p>
           </div>
 
@@ -65,7 +96,12 @@ const mostrar = (valor, fallback = "-") =>
           </div>
 
           <div class="rounded-lg border border-outline-variant/20 bg-surface-container/60 p-4">
-            <p class="text-xs uppercase tracking-wider text-on-surface-variant">Valor</p>
+            <p class="text-xs uppercase tracking-wider text-on-surface-variant">Posiciones</p>
+            <p class="mt-1 font-headline-md text-2xl text-primary">{posiciones.length}</p>
+          </div>
+
+          <div class="rounded-lg border border-outline-variant/20 bg-surface-container/60 p-4">
+            <p class="text-xs uppercase tracking-wider text-on-surface-variant">Valor total</p>
             <p class="mt-1 font-headline-md text-2xl text-primary">
               ${precioTotal.toFixed(1)}M
             </p>
@@ -73,7 +109,7 @@ const mostrar = (valor, fallback = "-") =>
         </div>
       </header>
 
-      <div class="rounded-xl border border-outline-variant/20 bg-surface-container/40 p-4 shadow-glow backdrop-blur-lg">
+      <section class="rounded-xl border border-outline-variant/20 bg-surface-container/40 p-4 shadow-glow backdrop-blur-lg">
         <div class="flex flex-col gap-4 lg:flex-row lg:items-center">
           <label class="relative min-w-0 flex-1">
             <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
@@ -81,9 +117,9 @@ const mostrar = (valor, fallback = "-") =>
             </span>
             <span class="sr-only">Buscar jugador</span>
             <input
-              class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high py-2 pl-10 pr-4 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary"
+              class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high py-3 pl-10 pr-4 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary"
               data-admin-search
-              placeholder="Buscar por nombre, club o nacionalidad..."
+              placeholder="Buscar por nombre, club, nacionalidad o posicion..."
               type="search"
             />
           </label>
@@ -92,7 +128,7 @@ const mostrar = (valor, fallback = "-") =>
             <label class="relative">
               <span class="sr-only">Filtrar por posicion</span>
               <select
-                class="w-full appearance-none rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-2 pr-10 text-on-surface outline-none transition focus:ring-1 focus:ring-primary sm:w-44"
+                class="w-full appearance-none rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 pr-10 text-on-surface outline-none transition focus:ring-1 focus:ring-primary sm:w-52"
                 data-position-filter
               >
                 <option value="">Todas las posiciones</option>
@@ -106,7 +142,7 @@ const mostrar = (valor, fallback = "-") =>
             <label class="relative">
               <span class="sr-only">Filtrar por nacionalidad</span>
               <select
-                class="w-full appearance-none rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-2 pr-10 text-on-surface outline-none transition focus:ring-1 focus:ring-primary sm:w-52"
+                class="w-full appearance-none rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 pr-10 text-on-surface outline-none transition focus:ring-1 focus:ring-primary sm:w-56"
                 data-nationality-filter
               >
                 <option value="">Todas las nacionalidades</option>
@@ -120,7 +156,7 @@ const mostrar = (valor, fallback = "-") =>
             </label>
           </div>
         </div>
-      </div>
+      </section>
 
       <section class="rounded-xl border border-outline-variant/20 bg-surface-container/40 p-6 shadow-2xl backdrop-blur-lg">
         <div class="mb-6 flex flex-col gap-2 border-b border-outline-variant/20 pb-5">
@@ -134,130 +170,55 @@ const mostrar = (valor, fallback = "-") =>
 
         <form class="grid gap-4 md:grid-cols-2 xl:grid-cols-4" data-player-form>
           <label class="block space-y-2">
-            <span class="font-label-bold text-xs uppercase text-on-surface-variant">
-              Nombre
-            </span>
-            <input
-              class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary"
-              name="nombre"
-              placeholder="Lionel Messi"
-              required
-              type="text"
-            />
+            <span class="font-label-bold text-xs uppercase text-on-surface-variant">Nombre</span>
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" name="nombre" placeholder="Lionel Messi" required type="text" />
           </label>
 
           <label class="block space-y-2">
-            <span class="font-label-bold text-xs uppercase text-on-surface-variant">
-              Posicion
-            </span>
-            <select
-              class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary"
-              name="posicion"
-              required
-            >
+            <span class="font-label-bold text-xs uppercase text-on-surface-variant">Posicion</span>
+            <select class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary" name="posicion" required>
               <option value="">Seleccionar</option>
-              <option value="POR">POR</option>
-              <option value="DEF">DEF</option>
-              <option value="MED">MED</option>
-              <option value="DEL">DEL</option>
+              {posicionesBase.map((posicion) => <option value={posicion}>{posicion}</option>)}
             </select>
           </label>
 
           <label class="block space-y-2">
-            <span class="font-label-bold text-xs uppercase text-on-surface-variant">
-              Club
-            </span>
-            <input
-              class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary"
-              name="club"
-              placeholder="Inter Miami"
-              type="text"
-            />
+            <span class="font-label-bold text-xs uppercase text-on-surface-variant">Club</span>
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" name="club" placeholder="Inter Miami" type="text" />
           </label>
 
           <label class="block space-y-2">
-            <span class="font-label-bold text-xs uppercase text-on-surface-variant">
-              Nacionalidad
-            </span>
-            <input
-              class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary"
-              name="nacionalidad"
-              placeholder="Argentina"
-              required
-              type="text"
-            />
+            <span class="font-label-bold text-xs uppercase text-on-surface-variant">Nacionalidad</span>
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" name="nacionalidad" placeholder="Argentina" required type="text" />
           </label>
 
           <label class="block space-y-2">
-            <span class="font-label-bold text-xs uppercase text-on-surface-variant">
-              Edad
-            </span>
-            <input
-              class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary"
-              min="0"
-              name="edad"
-              placeholder="36"
-              type="number"
-            />
+            <span class="font-label-bold text-xs uppercase text-on-surface-variant">Edad</span>
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" min="0" name="edad" placeholder="36" type="number" />
           </label>
 
           <label class="block space-y-2">
-            <span class="font-label-bold text-xs uppercase text-on-surface-variant">
-              Precio
-            </span>
-            <input
-              class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary"
-              min="0"
-              name="precio"
-              placeholder="12.5"
-              step="0.1"
-              type="number"
-            />
+            <span class="font-label-bold text-xs uppercase text-on-surface-variant">Precio</span>
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" min="0" name="precio" placeholder="12.5" step="0.1" type="number" />
           </label>
 
           <label class="block space-y-2">
-            <span class="font-label-bold text-xs uppercase text-on-surface-variant">
-              Goles
-            </span>
-            <input
-              class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary"
-              min="0"
-              name="goles"
-              placeholder="0"
-              type="number"
-            />
+            <span class="font-label-bold text-xs uppercase text-on-surface-variant">Goles</span>
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" min="0" name="goles" placeholder="0" type="number" />
           </label>
 
           <label class="block space-y-2">
-            <span class="font-label-bold text-xs uppercase text-on-surface-variant">
-              Asistencias
-            </span>
-            <input
-              class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary"
-              min="0"
-              name="asistencias"
-              placeholder="0"
-              type="number"
-            />
+            <span class="font-label-bold text-xs uppercase text-on-surface-variant">Asistencias</span>
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" min="0" name="asistencias" placeholder="0" type="number" />
           </label>
 
           <label class="block space-y-2 md:col-span-2 xl:col-span-3">
-            <span class="font-label-bold text-xs uppercase text-on-surface-variant">
-              Imagen URL
-            </span>
-            <input
-              class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary"
-              name="imagen_url"
-              placeholder="https://..."
-              type="url"
-            />
+            <span class="font-label-bold text-xs uppercase text-on-surface-variant">Imagen URL</span>
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" name="imagen_url" placeholder="https://..." type="url" />
           </label>
 
           <div class="flex items-end">
-            <button
-              class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 font-label-bold text-on-primary-fixed transition hover:bg-primary-fixed"
-              type="submit"
-            >
+            <button class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 font-label-bold text-on-primary-fixed transition hover:bg-primary-fixed disabled:cursor-wait disabled:opacity-70" type="submit">
               <span class="material-symbols-outlined">person_add</span>
               Crear jugador
             </button>
@@ -274,8 +235,23 @@ const mostrar = (valor, fallback = "-") =>
           </div>
         ) : (
           <section class="overflow-hidden rounded-xl border border-outline-variant/20 bg-surface-container/40 shadow-2xl backdrop-blur-lg">
+            <div class="flex flex-col gap-2 border-b border-outline-variant/20 p-6 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p class="font-label-bold text-xs uppercase tracking-widest text-primary">
+                  Registros
+                </p>
+                <h2 class="mt-1 font-headline-lg text-2xl font-bold text-on-surface">
+                  Jugadores del mercado
+                </h2>
+              </div>
+
+              <span class="text-sm text-on-surface-variant">
+                Mostrando <span data-visible-count>{jugadores.length}</span> de {jugadores.length}
+              </span>
+            </div>
+
             <div class="overflow-x-auto">
-              <table class="w-full min-w-[1040px] border-collapse text-left">
+              <table class="w-full min-w-[1180px] border-collapse text-left">
                 <thead class="border-b border-outline-variant/30 bg-surface-container-highest/50">
                   <tr>
                     <th class="px-6 py-4 font-label-bold text-xs uppercase tracking-widest text-primary">Jugador</th>
@@ -285,6 +261,7 @@ const mostrar = (valor, fallback = "-") =>
                     <th class="px-6 py-4 text-center font-label-bold text-xs uppercase tracking-widest text-primary">Edad</th>
                     <th class="px-6 py-4 text-center font-label-bold text-xs uppercase tracking-widest text-primary">Goles</th>
                     <th class="px-6 py-4 text-center font-label-bold text-xs uppercase tracking-widest text-primary">Asist.</th>
+                    <th class="px-6 py-4 text-right font-label-bold text-xs uppercase tracking-widest text-primary">Acciones</th>
                   </tr>
                 </thead>
 
@@ -365,6 +342,29 @@ const mostrar = (valor, fallback = "-") =>
                           <td class="px-6 py-4 text-center text-on-surface">
                             {mostrar(jugador.asistencias, "0")}
                           </td>
+
+                          <td class="px-6 py-4">
+                            <div class="flex justify-end gap-2">
+                              <button
+                                class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-outline-variant/30 bg-surface-container-high text-on-surface-variant transition hover:border-primary hover:text-primary"
+                                data-edit-player={playerPayload(jugador)}
+                                title="Editar jugador"
+                                type="button"
+                              >
+                                <span class="material-symbols-outlined text-[20px]">edit</span>
+                              </button>
+
+                              <button
+                                class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-error/30 bg-error-container/20 text-error transition hover:bg-error-container/40"
+                                data-delete-player={jugador.id}
+                                data-delete-name={jugador.nombre}
+                                title="Eliminar jugador"
+                                type="button"
+                              >
+                                <span class="material-symbols-outlined text-[20px]">delete</span>
+                              </button>
+                            </div>
+                          </td>
                         </tr>
                       );
                     })
@@ -379,17 +379,84 @@ const mostrar = (valor, fallback = "-") =>
             >
               No hay jugadores que coincidan con los filtros.
             </div>
-
-            <footer class="flex flex-col gap-4 bg-surface-container-high/40 p-6 sm:flex-row sm:items-center sm:justify-between">
-              <span class="text-sm text-on-surface-variant">
-                Mostrando <span data-visible-count>{jugadores.length}</span> de {jugadores.length} jugadores
-              </span>
-            </footer>
           </section>
         )
       }
     </div>
   </section>
+
+  <dialog class="fixed inset-0 m-auto max-h-[calc(100vh-32px)] w-[min(720px,calc(100vw-32px))] overflow-y-auto rounded-xl border border-outline-variant/30 bg-surface-container p-0 text-on-surface shadow-2xl backdrop:bg-black/70" data-edit-dialog>
+    <form class="grid gap-4 p-6 md:grid-cols-2" data-edit-form>
+      <input name="id" type="hidden" />
+
+      <div class="md:col-span-2">
+        <p class="font-label-bold text-xs uppercase tracking-widest text-primary">
+          Editar jugador
+        </p>
+        <h2 class="mt-1 font-headline-lg text-2xl font-bold text-on-surface">
+          Actualizar registro
+        </h2>
+      </div>
+
+      <label class="block space-y-2">
+        <span class="font-label-bold text-xs uppercase text-on-surface-variant">Nombre</span>
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="nombre" required type="text" />
+      </label>
+
+      <label class="block space-y-2">
+        <span class="font-label-bold text-xs uppercase text-on-surface-variant">Posicion</span>
+        <select class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="posicion" required>
+          {posiciones.map((posicion) => <option value={posicion}>{posicion}</option>)}
+        </select>
+      </label>
+
+      <label class="block space-y-2">
+        <span class="font-label-bold text-xs uppercase text-on-surface-variant">Club</span>
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="club" type="text" />
+      </label>
+
+      <label class="block space-y-2">
+        <span class="font-label-bold text-xs uppercase text-on-surface-variant">Nacionalidad</span>
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="nacionalidad" required type="text" />
+      </label>
+
+      <label class="block space-y-2">
+        <span class="font-label-bold text-xs uppercase text-on-surface-variant">Edad</span>
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" min="0" name="edad" type="number" />
+      </label>
+
+      <label class="block space-y-2">
+        <span class="font-label-bold text-xs uppercase text-on-surface-variant">Precio</span>
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" min="0" name="precio" step="0.1" type="number" />
+      </label>
+
+      <label class="block space-y-2">
+        <span class="font-label-bold text-xs uppercase text-on-surface-variant">Goles</span>
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" min="0" name="goles" type="number" />
+      </label>
+
+      <label class="block space-y-2">
+        <span class="font-label-bold text-xs uppercase text-on-surface-variant">Asistencias</span>
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" min="0" name="asistencias" type="number" />
+      </label>
+
+      <label class="block space-y-2 md:col-span-2">
+        <span class="font-label-bold text-xs uppercase text-on-surface-variant">Imagen URL</span>
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="imagen_url" type="url" />
+      </label>
+
+      <p class="hidden rounded-lg border px-4 py-3 text-sm md:col-span-2" data-edit-message></p>
+
+      <div class="flex flex-col-reverse gap-3 border-t border-outline-variant/20 pt-4 md:col-span-2 sm:flex-row sm:justify-end">
+        <button class="rounded-lg border border-outline-variant/40 px-5 py-3 font-label-bold text-label-bold text-on-surface-variant transition hover:border-primary hover:text-primary" data-close-edit type="button">
+          Cancelar
+        </button>
+        <button class="rounded-lg bg-primary px-5 py-3 font-label-bold text-label-bold text-on-primary-fixed transition hover:bg-primary-fixed disabled:cursor-wait disabled:opacity-70" type="submit">
+          Guardar cambios
+        </button>
+      </div>
+    </form>
+  </dialog>
 </HomeLayout>
 
 <script>
@@ -401,12 +468,15 @@ const mostrar = (valor, fallback = "-") =>
   const emptyState = document.querySelector("[data-empty-state]");
   const playerForm = document.querySelector("[data-player-form]");
   const formMessage = document.querySelector("[data-form-message]");
+  const editDialog = document.querySelector("[data-edit-dialog]");
+  const editForm = document.querySelector("[data-edit-form]");
+  const editMessage = document.querySelector("[data-edit-message]");
 
-  function mostrarMensaje(message, type = "success") {
-    if (!formMessage) return;
+  function setMessage(element, message, type = "success") {
+    if (!element) return;
 
-    formMessage.textContent = message;
-    formMessage.classList.remove(
+    element.textContent = message;
+    element.classList.remove(
       "hidden",
       "border-error/30",
       "bg-error-container/30",
@@ -417,7 +487,7 @@ const mostrar = (valor, fallback = "-") =>
     );
 
     if (type === "error") {
-      formMessage.classList.add(
+      element.classList.add(
         "border-error/30",
         "bg-error-container/30",
         "text-on-error-container",
@@ -425,11 +495,33 @@ const mostrar = (valor, fallback = "-") =>
       return;
     }
 
-    formMessage.classList.add(
+    element.classList.add(
       "border-primary/30",
       "bg-primary-container/30",
       "text-primary",
     );
+  }
+
+  function getPayload(form) {
+    return Object.fromEntries(new FormData(form).entries());
+  }
+
+  async function sendPlayerRequest(method, payload) {
+    const response = await fetch("/api/admin/jugadores", {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "No se pudo completar la operacion");
+    }
+
+    return data;
   }
 
   function filtrarJugadores() {
@@ -460,38 +552,77 @@ const mostrar = (valor, fallback = "-") =>
     event.preventDefault();
 
     const submitButton = playerForm.querySelector("button[type='submit']");
-    const formData = new FormData(playerForm);
-    const payload = Object.fromEntries(formData.entries());
+    const payload = getPayload(playerForm);
 
     submitButton.disabled = true;
-    submitButton.classList.add("opacity-70", "cursor-wait");
-    mostrarMensaje("Creando jugador...");
+    setMessage(formMessage, "Creando jugador...");
 
     try {
-      const response = await fetch("/api/admin/jugadores", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        mostrarMensaje(data.error || "No se pudo crear el jugador", "error");
-        return;
-      }
-
-      mostrarMensaje("Jugador creado correctamente. Actualizando mercado...");
-      window.setTimeout(() => {
-        window.location.reload();
-      }, 700);
-    } catch {
-      mostrarMensaje("Error de conexion al crear el jugador", "error");
+      await sendPlayerRequest("POST", payload);
+      setMessage(formMessage, "Jugador creado correctamente. Actualizando tabla...");
+      window.setTimeout(() => window.location.reload(), 600);
+    } catch (error) {
+      setMessage(formMessage, error.message, "error");
     } finally {
       submitButton.disabled = false;
-      submitButton.classList.remove("opacity-70", "cursor-wait");
     }
+  });
+
+  document.querySelectorAll("[data-edit-player]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const player = JSON.parse(button.dataset.editPlayer);
+
+      Object.entries(player).forEach(([key, value]) => {
+        const input = editForm?.elements.namedItem(key);
+        if (input) input.value = value ?? "";
+      });
+
+      editMessage?.classList.add("hidden");
+      editDialog?.showModal();
+    });
+  });
+
+  document.querySelector("[data-close-edit]")?.addEventListener("click", () => {
+    editDialog?.close();
+  });
+
+  editForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const submitButton = editForm.querySelector("button[type='submit']");
+    const payload = getPayload(editForm);
+
+    submitButton.disabled = true;
+    setMessage(editMessage, "Guardando cambios...");
+
+    try {
+      await sendPlayerRequest("PATCH", payload);
+      setMessage(editMessage, "Jugador actualizado. Actualizando tabla...");
+      window.setTimeout(() => window.location.reload(), 600);
+    } catch (error) {
+      setMessage(editMessage, error.message, "error");
+    } finally {
+      submitButton.disabled = false;
+    }
+  });
+
+  document.querySelectorAll("[data-delete-player]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const playerId = button.dataset.deletePlayer;
+      const playerName = button.dataset.deleteName || "este jugador";
+      const confirmed = window.confirm(`Eliminar a ${playerName}? Esta accion no se puede deshacer.`);
+
+      if (!confirmed) return;
+
+      button.disabled = true;
+
+      try {
+        await sendPlayerRequest("DELETE", { id: playerId });
+        window.location.reload();
+      } catch (error) {
+        alert(error.message);
+        button.disabled = false;
+      }
+    });
   });
 </script>

@@ -3,7 +3,16 @@ import Mercado from "../components/Mercado";
 import HomeLayout from "../layout/HomeLayout.astro";
 import "../styles/tailwind.css";
 
-import { supabase } from "./lib/supabase";
+import { supabase } from "../lib/supabase";
+import { getAuthSession } from "../lib/auth";
+
+export const prerender = false;
+
+const session = await getAuthSession(Astro.cookies);
+
+if (!session.isAuthenticated) {
+  return Astro.redirect("/login");
+}
 
 const { data: jugadores } = await supabase
   .from("jugadores")
@@ -12,14 +21,6 @@ const { data: jugadores } = await supabase
 const { data: nacionalidades } = await supabase
   .from("jugadores")
   .select("nacionalidad");  
-
-const {
-  data: { user },
-} = await supabase.auth.getUser();
-
-if (!user) {
-  return Astro.redirect("/login");
-}
 ---
 
  

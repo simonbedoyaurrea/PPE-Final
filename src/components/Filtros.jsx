@@ -13,10 +13,10 @@ export default function Filtros({
 
   const posiciones = [
     { label: "TODAS", value: "" },
-    { label: "POR", value: "Portero" },
-    { label: "DEF", value: "Defensa" },
-    { label: "MED", value: "Mediocampista" },
-    { label: "DEL", value: "Delantero" },
+    { label: "POR", value: "POR" },
+    { label: "DEF", value: "DEF" },
+    { label: "MED", value: "MED" },
+    { label: "DEL", value: "DEL" },
   ];
 
   const resetFiltros = () => {
@@ -30,7 +30,7 @@ export default function Filtros({
       <div className="bg-surface-variant/30 backdrop-blur-xl border border-outline-variant/20 rounded-2xl p-margin shadow-[0_8px_32px_rgba(0,0,0,0.3)] max-h-[calc(100vh-7rem)] overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <h3 className="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
-            <span className="text-primary">☰</span>
+            <span className="material-symbols-outlined text-primary">filter_list</span>
             Filtros
           </h3>
 
