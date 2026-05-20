@@ -51,6 +51,28 @@ export default function SquadPitch({ ownedPlayers = [], budgetLeft = 15.5 }) {
     (activePlayers / formationSlots.length) * 100
   )}%`;
 
+  const venderJugador = async (jugadorId) => {
+  const response = await fetch("/api/vender", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      jugadorId,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    alert(data.error || "Error al vender jugador");
+    return;
+  }
+
+  window.location.reload();
+};
+
   return (
     <div className="grid grid-cols-1 gap-gutter lg:grid-cols-12">
       <div className="lg:col-span-8 xl:col-span-9 bg-surface-container/30 border border-outline-variant/20 rounded-3xl p-4 backdrop-blur-xl shadow-2xl relative">
@@ -113,6 +135,26 @@ export default function SquadPitch({ ownedPlayers = [], budgetLeft = 15.5 }) {
                   >
                     {player?.name ?? "Sin compra"}
                   </span>
+                  {player && (
+                    <button
+                      onClick={() => venderJugador(player.id)}
+                      className="
+                        mt-1
+                        rounded-md
+                        bg-red-500
+                        px-2
+                        py-1
+                        text-[9px]
+                        font-bold
+                        uppercase
+                        text-white
+                        transition
+                        hover:bg-red-400
+                      "
+                    >
+                      Vender
+                    </button>
+                  )}
                 </div>
 
                 <div

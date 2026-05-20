@@ -1,8 +1,5 @@
 ---
 import "../styles/tailwind.css";
-
-
-
 ---
 
 <html lang="en" class="dark">
@@ -109,15 +106,23 @@ import "../styles/tailwind.css";
      
 
             <!-- login -->
+            <button
+              type="submit"
+              class="w-full rounded-2xl bg-primary px-6 py-4 font-display text-lg font-bold uppercase text-black transition hover:scale-[1.01] hover:shadow-glow"
+            >
+              Crear cuenta
+            </button>
+
             <div class="pt-2 text-center">
               <p class="text-sm text-textMuted">
-                Tienes cuenta?
-                  <button
-                    type="submit"
-                    class="w-full rounded-2xl bg-primary px-6 py-4 font-display text-lg font-bold uppercase text-black transition hover:scale-[1.01] hover:shadow-glow"
-                  >
-                    Crear cuenta
-                  </button>
+                ¿Ya tienes cuenta?
+
+                <a
+                  href="/login"
+                  class="font-semibold text-accent transition hover:opacity-80"
+                >
+                  Iniciar sesión
+                </a>
               </p>
             </div>
           </form>

@@ -8,10 +8,22 @@ export default function Card({
   price,
   age,
   onCompra,
+  onVenta,
   comprado,
   posicionLlena,
 }) {
-  const botonDesactivado = comprado || posicionLlena;
+  const botonDesactivado = posicionLlena && !comprado;
+
+  const posicionCorta =
+    position === "Portero"
+      ? "POR"
+      : position === "Defensa"
+      ? "DEF"
+      : position === "Mediocampista"
+      ? "MED"
+      : position === "Delantero"
+      ? "DEL"
+      : position;
 
   return (
     <div className="relative pt-14 pb-6 px-4 bg-surface-container-highest/40 backdrop-blur-md border border-outline-variant/30 rounded-[2rem_2rem_0.5rem_0.5rem] flex flex-col items-center shadow-xl">
@@ -33,7 +45,7 @@ export default function Card({
 
       <div className="absolute top-3 left-4 text-center z-20">
         <div className="font-label-bold text-label-bold text-primary mt-1">
-          {position}
+          {posicionCorta}
         </div>
       </div>
 
@@ -53,15 +65,23 @@ export default function Card({
         <button
           type="button"
           disabled={botonDesactivado}
-          onClick={() => onCompra(id)}
+          onClick={() => {
+            if (comprado) {
+              onVenta(id);
+            } else {
+              onCompra(id);
+            }
+          }}
           className={`font-label-bold text-label-bold px-5 py-2 skew-x-[-5deg] transition-all ${
-            botonDesactivado
+            comprado
+              ? "bg-accent text-black hover:opacity-80"
+              : botonDesactivado
               ? "bg-surface-variant text-on-surface-variant cursor-not-allowed"
               : "bg-primary text-on-primary-fixed hover:bg-primary-fixed"
           }`}
         >
           <span className="skew-x-[5deg] block">
-            {comprado ? "COMPRADO" : posicionLlena ? "CUPO LLENO" : "BUY"}
+            {comprado ? "VENDER" : posicionLlena ? "CUPO LLENO" : "BUY"}
           </span>
         </button>
       </div>
