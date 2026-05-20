@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { normalizeCountryCode } from "../lib/countries";
 
 export default function Card({
   id,
@@ -28,7 +29,8 @@ export default function Card({
       ? "DEL"
       : position;
 
-  const codigoBandera = String(flag || "").trim().toLowerCase();
+  const codigoPais = normalizeCountryCode(flag);
+  const codigoBandera = codigoPais.toLowerCase();
   const codigoBanderaNormalizado =
     codigoBandera === "en" ? "gb-eng" : codigoBandera;
   const banderaUrl =
@@ -82,7 +84,7 @@ export default function Card({
           <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-outline-variant/30 bg-surface-container-high">
             {banderaUrl && banderaValida ? (
               <img
-                alt={`Bandera ${flag}`}
+                alt={`Bandera ${codigoPais}`}
                 src={banderaUrl}
                 onError={() => setBanderaValida(false)}
                 className="h-full w-full object-cover"
@@ -93,7 +95,7 @@ export default function Card({
               </span>
             )}
           </span>
-          {flag || "N/A"}
+          {codigoPais || "N/A"}
         </p>
 
         <p className="flex items-center gap-2">

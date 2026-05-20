@@ -1,3 +1,5 @@
+import { normalizeCountryCode } from "../lib/countries";
+
 export default function Filtros({
   filtroPrecio,
   filtroPosicion,
@@ -8,7 +10,11 @@ export default function Filtros({
   nacionalidades,
 }) {
   const nacionalidadesUnicas = [
-    ...new Set(nacionalidades.map((j) => j.nacionalidad)),
+    ...new Set(
+      nacionalidades
+        .map((j) => normalizeCountryCode(j.nacionalidad))
+        .filter(Boolean),
+    ),
   ];
 
   const posiciones = [

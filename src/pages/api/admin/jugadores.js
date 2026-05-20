@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { getAdminSession } from "../../../lib/adminAuth";
+import { normalizeCountryCode } from "../../../lib/countries";
 
 export const prerender = false;
 
@@ -27,7 +28,7 @@ function buildPlayerPayload(body) {
     nombre: body.nombre?.trim(),
     posicion: body.posicion?.trim(),
     club: body.club?.trim() || null,
-    nacionalidad: body.nacionalidad?.trim(),
+    nacionalidad: normalizeCountryCode(body.nacionalidad),
     edad: toNumber(body.edad),
     precio: toNumber(body.precio),
     imagen_url: body.imagen_url?.trim() || null,

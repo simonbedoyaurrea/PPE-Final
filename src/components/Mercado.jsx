@@ -3,6 +3,7 @@ import Card from "./Card";
 import Filtros from "./Filtros";
 import BarraBusqueda from "./BarraBusqueda";
 import Fuse from "fuse.js";
+import { normalizeCountryCode } from "../lib/countries";
 
 export default function Mercado({ jugadores, nacionalidades }) {
   const jugadoresPorPagina = 12;
@@ -195,7 +196,7 @@ const conteoPosiciones = contarPorPosicion(jugadoresComprados);
 
     if (filtroNacionalidad) {
       resultado = resultado.filter(
-        (j) => j.nacionalidad === filtroNacionalidad
+        (j) => normalizeCountryCode(j.nacionalidad) === filtroNacionalidad
       );
     }
 

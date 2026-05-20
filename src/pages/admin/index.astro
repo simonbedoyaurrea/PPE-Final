@@ -2,6 +2,7 @@
 import HomeLayout from "../../layout/HomeLayout.astro";
 import { getAdminSession } from "../../lib/adminAuth";
 import { supabase } from "../../lib/supabase";
+import { normalizeCountryCode } from "../../lib/countries";
 
 export const prerender = false;
 
@@ -29,7 +30,11 @@ const posiciones = [
   ]),
 ];
 const nacionalidades = [
-  ...new Set(jugadores.map((jugador) => jugador.nacionalidad).filter(Boolean)),
+  ...new Set(
+    jugadores
+      .map((jugador) => normalizeCountryCode(jugador.nacionalidad))
+      .filter(Boolean),
+  ),
 ];
 
 const precioTotal = jugadores.reduce(
@@ -46,7 +51,7 @@ const playerPayload = (jugador) =>
     nombre: jugador.nombre ?? "",
     posicion: jugador.posicion ?? "",
     club: jugador.club ?? "",
-    nacionalidad: jugador.nacionalidad ?? "",
+    nacionalidad: normalizeCountryCode(jugador.nacionalidad),
     edad: jugador.edad ?? 0,
     precio: jugador.precio ?? 0,
     goles: jugador.goles ?? 0,
@@ -189,7 +194,7 @@ const playerPayload = (jugador) =>
 
           <label class="block space-y-2">
             <span class="font-label-bold text-xs uppercase text-on-surface-variant">Nacionalidad</span>
-            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" name="nacionalidad" placeholder="Argentina" required type="text" />
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" name="nacionalidad" placeholder="Argentina o AR" required type="text" />
           </label>
 
           <label class="block space-y-2">
@@ -271,7 +276,7 @@ const playerPayload = (jugador) =>
                       const searchText = [
                         jugador.nombre,
                         jugador.club,
-                        jugador.nacionalidad,
+                        normalizeCountryCode(jugador.nacionalidad),
                         jugador.posicion,
                       ]
                         .filter(Boolean)
@@ -282,7 +287,7 @@ const playerPayload = (jugador) =>
                         <tr
                           class="group transition hover:bg-primary/5"
                           data-admin-row
-                          data-nationality={jugador.nacionalidad ?? ""}
+                          data-nationality={normalizeCountryCode(jugador.nacionalidad)}
                           data-position={jugador.posicion ?? ""}
                           data-search={searchText}
                         >
@@ -316,7 +321,7 @@ const playerPayload = (jugador) =>
                           </td>
 
                           <td class="px-6 py-4 text-on-surface">
-                            {mostrar(jugador.nacionalidad)}
+                            {mostrar(normalizeCountryCode(jugador.nacionalidad))}
                           </td>
 
                           <td class="px-6 py-4">
@@ -417,7 +422,7 @@ const playerPayload = (jugador) =>
 
       <label class="block space-y-2">
         <span class="font-label-bold text-xs uppercase text-on-surface-variant">Nacionalidad</span>
-        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="nacionalidad" required type="text" />
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="nacionalidad" placeholder="Argentina o AR" required type="text" />
       </label>
 
       <label class="block space-y-2">
