@@ -1,7 +1,7 @@
 export default function BarraBusqueda({ busqueda, setBusqueda }) {
   return (
-    <div className="relative w-full max-w-xs hidden sm:block">
-      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">
+    <div className="group relative hidden w-full max-w-xs sm:block">
+      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant transition-colors duration-200 group-hover:text-primary">
         search
       </span>
 
@@ -15,6 +15,9 @@ export default function BarraBusqueda({ busqueda, setBusqueda }) {
           bg-surface-container/50
           border
           border-outline-variant/50
+          hover:border-primary/60
+          hover:bg-surface-container-high
+          hover:shadow-glow
           focus:border-primary
           focus:ring-1
           focus:ring-primary
