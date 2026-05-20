@@ -2,6 +2,7 @@
 import CanchaEquipo from "../components/CanchaEquipo.jsx";
 import HomeLayout from "../layout/HomeLayout.astro";
 import { supabase } from "../lib/supabase";
+import { normalizePositionCode } from "../lib/positions";
 export const prerender = false;
 
 const token = Astro.cookies.get("sb-access-token")?.value;
@@ -43,17 +44,6 @@ if (comprasError) {
   console.error("Error cargando jugadores comprados:", comprasError.message);
 }
 
-const positionMap = {
-  Portero: "GK",
-  POR: "GK",
-  Defensa: "DEF",
-  DEF: "DEF",
-  Mediocampista: "MID",
-  MED: "MID",
-  Delantero: "FWD",
-  DEL: "FWD",
-};
-
 function normalizarJugador(jugador) {
   const jugadorData = Array.isArray(jugador) ? jugador[0] : jugador;
 
@@ -66,7 +56,7 @@ function normalizarJugador(jugador) {
   return {
     id: jugadorData["id"],
     name: jugadorData["nombre"],
-    position: positionMap[posicion] ?? "MID",
+    position: normalizePositionCode(posicion) || "MED",
     club: jugadorData["club"],
     nationality: jugadorData["nacionalidad"],
     age: jugadorData["edad"],

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { normalizeCountryCode } from "../lib/countries";
+import { normalizePositionCode } from "../lib/positions";
 
 export default function Card({
   id,
@@ -18,16 +19,7 @@ export default function Card({
   const [banderaValida, setBanderaValida] = useState(true);
   const botonDesactivado = posicionLlena && !comprado;
 
-  const posicionCorta =
-    position === "Portero" || position === "POR"
-      ? "POR"
-      : position === "Defensa" || position === "DEF"
-      ? "DEF"
-      : position === "Mediocampista" || position === "MED"
-      ? "MED"
-      : position === "Delantero" || position === "DEL"
-      ? "DEL"
-      : position;
+  const posicionCorta = normalizePositionCode(position);
 
   const codigoPais = normalizeCountryCode(flag);
   const codigoBandera = codigoPais.toLowerCase();

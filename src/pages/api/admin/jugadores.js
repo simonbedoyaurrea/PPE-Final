@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { getAdminSession } from "../../../lib/adminAuth";
 import { normalizeCountryCode } from "../../../lib/countries";
+import { normalizePositionCode } from "../../../lib/positions";
 
 export const prerender = false;
 
@@ -26,7 +27,7 @@ function toNumber(value, fallback = 0) {
 function buildPlayerPayload(body) {
   return {
     nombre: body.nombre?.trim(),
-    posicion: body.posicion?.trim(),
+    posicion: normalizePositionCode(body.posicion),
     club: body.club?.trim() || null,
     nacionalidad: normalizeCountryCode(body.nacionalidad),
     edad: toNumber(body.edad),

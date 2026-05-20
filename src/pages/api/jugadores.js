@@ -1,4 +1,5 @@
 import { supabase } from "../../lib/supabase";
+import { normalizePositionCode } from "../../lib/positions";
 
 export const prerender = false;
 
@@ -16,7 +17,10 @@ export async function GET() {
 
     return new Response(
       JSON.stringify({
-        data: jugadores,
+        data: jugadores.map((jugador) => ({
+          ...jugador,
+          posicion: normalizePositionCode(jugador.posicion),
+        })),
       }),
       { status: 200 },
     );

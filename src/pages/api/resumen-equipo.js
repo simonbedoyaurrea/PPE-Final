@@ -1,4 +1,5 @@
 import { supabase } from "../../lib/supabase";
+import { normalizePositionCode } from "../../lib/positions";
 
 export const prerender = false;
 
@@ -30,11 +31,16 @@ export async function GET({ cookies }) {
       `)
       .eq("id_usuario", user.id);
 
-    const jugadores = compras.map((c) =>
-      Array.isArray(c.jugadores)
+    const jugadores = compras.map((c) => {
+      const jugador = Array.isArray(c.jugadores)
         ? c.jugadores[0]
-        : c.jugadores
-    );
+        : c.jugadores;
+
+      return {
+        ...jugador,
+        posicion: normalizePositionCode(jugador?.posicion),
+      };
+    });
 
     const gastado = jugadores.reduce(
       (total, j) => total + Number(j.precio || 0),

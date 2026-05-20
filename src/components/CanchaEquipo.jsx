@@ -1,38 +1,32 @@
 import { useRef, useState } from "react";
+import { POSITION_LABELS, normalizePositionCode } from "../lib/positions";
 
 const formationSlots = [
-  { key: "fwd-left", position: "FWD", left: 20, top: 15 },
-  { key: "fwd-center", position: "FWD", left: 50, top: 10 },
-  { key: "fwd-right", position: "FWD", left: 80, top: 15 },
-  { key: "mid-left", position: "MID", left: 25, top: 40 },
-  { key: "mid-center", position: "MID", left: 50, top: 45 },
-  { key: "mid-right", position: "MID", left: 75, top: 40 },
-  { key: "def-left", position: "DEF", left: 15, top: 70 },
-  { key: "def-left-center", position: "DEF", left: 38, top: 75 },
-  { key: "def-right-center", position: "DEF", left: 62, top: 75 },
-  { key: "def-right", position: "DEF", left: 85, top: 70 },
-  { key: "gk", position: "GK", left: 50, top: 90 },
+  { key: "del-izquierda", position: "DEL", side: "Izquierda", left: 20, top: 15 },
+  { key: "del-centro", position: "DEL", side: "Centro", left: 50, top: 10 },
+  { key: "del-derecha", position: "DEL", side: "Derecha", left: 80, top: 15 },
+  { key: "med-izquierda", position: "MED", side: "Izquierda", left: 25, top: 40 },
+  { key: "med-centro", position: "MED", side: "Centro", left: 50, top: 45 },
+  { key: "med-derecha", position: "MED", side: "Derecha", left: 75, top: 40 },
+  { key: "def-izquierda", position: "DEF", side: "Izquierda", left: 15, top: 70 },
+  { key: "def-centro-izquierda", position: "DEF", side: "Centro izquierda", left: 38, top: 75 },
+  { key: "def-centro-derecha", position: "DEF", side: "Centro derecha", left: 62, top: 75 },
+  { key: "def-derecha", position: "DEF", side: "Derecha", left: 85, top: 70 },
+  { key: "por", position: "POR", side: "Centro", left: 50, top: 90 },
 ];
 
 const positionBadge = {
-  FWD: "bg-tertiary-container text-tertiary-fixed-dim border border-tertiary/70",
-  MID: "bg-[#172b44] text-[#9ed2ff] border border-[#5fa8e8]/70",
+  DEL: "bg-tertiary-container text-tertiary-fixed-dim border border-tertiary/70",
+  MED: "bg-[#172b44] text-[#9ed2ff] border border-[#5fa8e8]/70",
   DEF: "bg-error-container/25 text-error border border-error/50",
-  GK: "bg-[#2d2546] text-[#c7b7ff] border border-[#8f7cff]/70",
+  POR: "bg-[#2d2546] text-[#c7b7ff] border border-[#8f7cff]/70",
 };
 
 const positionAccent = {
-  FWD: "border-tertiary shadow-[0_0_18px_rgba(249,189,34,0.25)]",
-  MID: "border-[#5fa8e8] shadow-[0_0_18px_rgba(95,168,232,0.25)]",
+  DEL: "border-tertiary shadow-[0_0_18px_rgba(249,189,34,0.25)]",
+  MED: "border-[#5fa8e8] shadow-[0_0_18px_rgba(95,168,232,0.25)]",
   DEF: "border-error shadow-[0_0_18px_rgba(255,180,171,0.22)]",
-  GK: "border-[#8f7cff] shadow-[0_0_18px_rgba(143,124,255,0.25)]",
-};
-
-const positionName = {
-  FWD: "Ataque",
-  MID: "Medio",
-  DEF: "Defensa",
-  GK: "Porteria",
+  POR: "border-[#8f7cff] shadow-[0_0_18px_rgba(143,124,255,0.25)]",
 };
 
 const formatMoney = (value) => `$${Number(value).toFixed(1)}M`;
@@ -51,7 +45,7 @@ export default function SquadPitch({ ownedPlayers = [], budgetLeft = 15.5 }) {
   };
 
   const playersByPosition = ownedPlayers.reduce((groups, player) => {
-    const position = player.position ?? "MID";
+    const position = normalizePositionCode(player.position ?? "MED");
     groups[position] = groups[position] ?? [];
     groups[position].push(player);
     return groups;
@@ -210,7 +204,7 @@ export default function SquadPitch({ ownedPlayers = [], budgetLeft = 15.5 }) {
                   className={`absolute -top-2 -right-2 ${
                     positionBadge[slot.position]
                   } text-[9px] font-bold px-1.5 rounded-md z-30 shadow-md`}
-                  title={positionName[slot.position]}
+                  title={`${POSITION_LABELS[slot.position]} ${slot.side}`}
                 >
                   {slot.position}
                 </div>

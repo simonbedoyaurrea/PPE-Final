@@ -4,6 +4,7 @@ import Filtros from "./Filtros";
 import BarraBusqueda from "./BarraBusqueda";
 import Fuse from "fuse.js";
 import { normalizeCountryCode } from "../lib/countries";
+import { POSITION_LIMITS, normalizePositionCode } from "../lib/positions";
 
 export default function Mercado({ jugadores, nacionalidades }) {
   const jugadoresPorPagina = 12;
@@ -62,14 +63,6 @@ export default function Mercado({ jugadores, nacionalidades }) {
     avisoTimeout.current = window.setTimeout(() => setAviso(null), 3500);
   };
 
-  const posicionCorta = (posicion) => {
-    if (posicion === "Portero" || posicion === "POR") return "POR";
-    if (posicion === "Defensa" || posicion === "DEF") return "DEF";
-    if (posicion === "Mediocampista" || posicion === "MED") return "MED";
-    if (posicion === "Delantero" || posicion === "DEL") return "DEL";
-    return posicion;
-  };
-
   const comprarJugador = async (jugadorId) => {
 
   const jugador = jugadores.find((j) => j.id === jugadorId);
@@ -79,9 +72,9 @@ export default function Mercado({ jugadores, nacionalidades }) {
     return;
   }
 
-  const posicion = posicionCorta(jugador.posicion);
+  const posicion = normalizePositionCode(jugador.posicion);
   const cantidadActual = conteoPosiciones[posicion] || 0;
-  const limite = limitesPorPosicion[posicion];
+  const limite = POSITION_LIMITS[posicion];
 
   if (limite && cantidadActual >= limite) {
     mostrarAviso(
@@ -158,16 +151,9 @@ export default function Mercado({ jugadores, nacionalidades }) {
     }
   };
 
-  const limitesPorPosicion = {
-  DEL: 3,
-  MED: 3,
-  DEF: 4,
-  POR: 1,
-};
-
 function contarPorPosicion(jugadoresComprados) {
   return jugadoresComprados.reduce((contador, compra) => {
-    const posicion = posicionCorta(compra.jugadores?.posicion || compra.posicion);
+    const posicion = normalizePositionCode(compra.jugadores?.posicion || compra.posicion);
 
     contador[posicion] = (contador[posicion] || 0) + 1;
 
@@ -191,7 +177,7 @@ const conteoPosiciones = contarPorPosicion(jugadoresComprados);
     }
 
     if (filtroPosicion) {
-      resultado = resultado.filter((j) => posicionCorta(j.posicion) === filtroPosicion);
+      resultado = resultado.filter((j) => normalizePositionCode(j.posicion) === filtroPosicion);
     }
 
     if (filtroNacionalidad) {

@@ -1,4 +1,5 @@
 import { normalizeCountryCode } from "../lib/countries";
+import { POSITION_CODES } from "../lib/positions";
 
 export default function Filtros({
   filtroPrecio,
@@ -19,10 +20,7 @@ export default function Filtros({
 
   const posiciones = [
     { label: "TODAS", value: "" },
-    { label: "POR", value: "POR" },
-    { label: "DEF", value: "DEF" },
-    { label: "MED", value: "MED" },
-    { label: "DEL", value: "DEL" },
+    ...POSITION_CODES.map((position) => ({ label: position, value: position })),
   ];
 
   const resetFiltros = () => {

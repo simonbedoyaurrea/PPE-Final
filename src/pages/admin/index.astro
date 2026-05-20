@@ -3,6 +3,7 @@ import HomeLayout from "../../layout/HomeLayout.astro";
 import { getAdminSession } from "../../lib/adminAuth";
 import { supabase } from "../../lib/supabase";
 import { normalizeCountryCode } from "../../lib/countries";
+import { POSITION_CODES, POSITION_LABELS, normalizePositionCode } from "../../lib/positions";
 
 export const prerender = false;
 
@@ -22,11 +23,11 @@ const { data, error } = await supabase
   .order("nombre", { ascending: true });
 
 const jugadores = data ?? [];
-const posicionesBase = ["Portero", "Defensa", "Mediocampista", "Delantero"];
+const posicionesBase = POSITION_CODES;
 const posiciones = [
   ...new Set([
     ...posicionesBase,
-    ...jugadores.map((jugador) => jugador.posicion).filter(Boolean),
+    ...jugadores.map((jugador) => normalizePositionCode(jugador.posicion)).filter(Boolean),
   ]),
 ];
 const nacionalidades = [
@@ -49,7 +50,7 @@ const playerPayload = (jugador) =>
   JSON.stringify({
     id: jugador.id,
     nombre: jugador.nombre ?? "",
-    posicion: jugador.posicion ?? "",
+    posicion: normalizePositionCode(jugador.posicion),
     club: jugador.club ?? "",
     nacionalidad: normalizeCountryCode(jugador.nacionalidad),
     edad: jugador.edad ?? 0,
@@ -183,7 +184,7 @@ const playerPayload = (jugador) =>
             <span class="font-label-bold text-xs uppercase text-on-surface-variant">Posicion</span>
             <select class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary" name="posicion" required>
               <option value="">Seleccionar</option>
-              {posicionesBase.map((posicion) => <option value={posicion}>{posicion}</option>)}
+              {posicionesBase.map((posicion) => <option value={posicion}>{posicion} - {POSITION_LABELS[posicion]}</option>)}
             </select>
           </label>
 
@@ -277,7 +278,7 @@ const playerPayload = (jugador) =>
                         jugador.nombre,
                         jugador.club,
                         normalizeCountryCode(jugador.nacionalidad),
-                        jugador.posicion,
+                        normalizePositionCode(jugador.posicion),
                       ]
                         .filter(Boolean)
                         .join(" ")
@@ -288,7 +289,7 @@ const playerPayload = (jugador) =>
                           class="group transition hover:bg-primary/5"
                           data-admin-row
                           data-nationality={normalizeCountryCode(jugador.nacionalidad)}
-                          data-position={jugador.posicion ?? ""}
+                          data-position={normalizePositionCode(jugador.posicion)}
                           data-search={searchText}
                         >
                           <td class="px-6 py-4">
@@ -326,7 +327,7 @@ const playerPayload = (jugador) =>
 
                           <td class="px-6 py-4">
                             <span class="rounded-sm border border-primary/30 bg-primary-container px-3 py-1 font-label-bold text-xs uppercase italic text-primary">
-                              {mostrar(jugador.posicion)}
+                              {mostrar(normalizePositionCode(jugador.posicion))}
                             </span>
                           </td>
 
@@ -411,7 +412,7 @@ const playerPayload = (jugador) =>
       <label class="block space-y-2">
         <span class="font-label-bold text-xs uppercase text-on-surface-variant">Posicion</span>
         <select class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="posicion" required>
-          {posiciones.map((posicion) => <option value={posicion}>{posicion}</option>)}
+          {posiciones.map((posicion) => <option value={posicion}>{posicion} - {POSITION_LABELS[posicion] ?? posicion}</option>)}
         </select>
       </label>
 

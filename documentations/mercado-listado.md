@@ -109,22 +109,25 @@ Y el listado se ordena segun la opcion elegida:
 Archivo:
 
 ```txt
-src/components/Mercado.jsx
+src/lib/positions.js
 ```
 
-Se agrego una funcion simple para tratar igual las posiciones largas y cortas:
+Se agrego una funcion compartida para tratar igual las posiciones largas, cortas y valores antiguos:
 
 ```js
-const posicionCorta = (posicion) => {
-  if (posicion === "Portero" || posicion === "POR") return "POR";
-  if (posicion === "Defensa" || posicion === "DEF") return "DEF";
-  if (posicion === "Mediocampista" || posicion === "MED") return "MED";
-  if (posicion === "Delantero" || posicion === "DEL") return "DEL";
-  return posicion;
-};
+normalizePositionCode(posicion)
 ```
 
 Asi el filtro de defensa funciona tanto con `DEF` como con `Defensa`.
+
+El formato visible final siempre queda en espanol:
+
+```txt
+POR
+DEF
+MED
+DEL
+```
 
 ## Cartas de jugadores
 

@@ -45,12 +45,35 @@ Las posiciones ya no dependen solo del verde principal.
 
 Se usan colores distintos para contrastar mejor con el fondo de la cancha:
 
-- `FWD`: amarillo/dorado.
-- `MID`: azul.
+- `DEL`: amarillo/dorado.
+- `MED`: azul.
 - `DEF`: rojo suave.
-- `GK`: violeta.
+- `POR`: violeta.
 
 Esto hace que las etiquetas se lean mejor sobre el campo verde oscuro.
+
+## Posiciones en espanol
+
+La cancha ya no usa abreviaturas en ingles para mostrar posiciones.
+
+Ahora todo se muestra con:
+
+```txt
+POR
+DEF
+MED
+DEL
+```
+
+Los slots tambien usan nombres en espanol para los lados:
+
+- Izquierda.
+- Centro.
+- Derecha.
+- Centro izquierda.
+- Centro derecha.
+
+El codigo aun acepta valores antiguos como compatibilidad, pero los normaliza antes de mostrarlos.
 
 ## Hovers de jugadores
 

@@ -1,27 +1,9 @@
 import { supabase } from "../../lib/supabase";
+import { POSITION_LIMITS, normalizePositionCode } from "../../lib/positions";
 
 
 
 export const prerender = false;
-
-const limitesPorPosicion = {
-  DEL: 3,
-  MED: 3,
-  DEF: 4,
-  POR: 1,
-
-  // Por si en tu base tienes posiciones en texto completo
-  Delantero: 3,
-  Mediocampista: 3,
-  Defensa: 4,
-  Portero: 1,
-  Arquero: 1,
-
-  // Por si usas nombres en inglés en algún componente
-  FWD: 3,
-  MID: 3,
-  GK: 1,
-};
 
 function jsonResponse(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -33,38 +15,13 @@ function jsonResponse(data, status = 200) {
 }
 
 function normalizarPosicion(posicion) {
-  const mapa = {
-    Delantero: "DEL",
-    FWD: "DEL",
-    DEL: "DEL",
-
-    Mediocampista: "MED",
-    MID: "MED",
-    MED: "MED",
-
-    Defensa: "DEF",
-    DEF: "DEF",
-
-    Portero: "POR",
-    Arquero: "POR",
-    GK: "POR",
-    POR: "POR",
-  };
-
-  return mapa[posicion] ?? posicion;
+  return normalizePositionCode(posicion);
 }
 
 function obtenerLimite(posicion) {
   const posicionNormalizada = normalizarPosicion(posicion);
 
-  const limites = {
-    DEL: 3,
-    MED: 3,
-    DEF: 4,
-    POR: 1,
-  };
-
-  return limites[posicionNormalizada];
+  return POSITION_LIMITS[posicionNormalizada];
 }
 
 export async function POST({ request, cookies }) {
