@@ -122,26 +122,56 @@ import "../styles/tailwind.css";
       }
 
       playersList.innerHTML = jugadores.map((player) => `
-        <div class="flex items-center gap-4 rounded-2xl border border-white/10 bg-background/40 p-4">
-          <img
-            src="${player.imagen_url || ""}"
-            class="h-16 w-16 rounded-full object-cover"
-            alt="${player.nombre || "Jugador"}"
-          />
+        <div class="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-background/40 p-4">
+          
+          <div class="flex items-center gap-4">
+            <img
+              src="${player.imagen_url || ""}"
+              class="h-16 w-16 rounded-full object-cover"
+              alt="${player.nombre || "Jugador"}"
+            />
 
-          <div>
-            <h3 class="font-bold text-text">
-              ${player.nombre || "Jugador"}
-            </h3>
+            <div>
+              <h3 class="font-bold text-text">
+                ${player.nombre || "Jugador"}
+              </h3>
 
-            <p class="text-sm text-textMuted">
-              ${player.posicion || ""}
-            </p>
+              <p class="text-sm text-textMuted">
+                ${player.posicion || ""}
+              </p>
+            </div>
           </div>
+
+          <button
+            class="rounded-lg bg-red-500 px-4 py-2 text-sm font-bold uppercase text-white transition hover:bg-red-400"
+            onclick="venderJugador('${player.id}')"
+          >
+            Vender
+          </button>
         </div>
       `).join("");
-    }
+      }
+      async function venderJugador(jugadorId) {
+        const response = await fetch("/api/vender", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            jugadorId,
+          }),
+        });
 
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.error || "Error al vender");
+          return;
+        }
+
+        window.location.reload();
+      }
     document.getElementById("logoutBtn").addEventListener("click", async () => {
       await fetch("/api/logout", {
         method: "POST",

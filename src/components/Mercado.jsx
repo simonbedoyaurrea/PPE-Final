@@ -9,6 +9,7 @@ export default function Mercado({ jugadores, nacionalidades }) {
   const [filtroPrecio, setFiltroPrecio] = useState(null);
   const [filtroNacionalidad, setFiltroNacionalidad] = useState(null);
   const [busqueda, setBusqueda] = useState("");
+  const [cantidadVisible, setCantidadVisible] = useState(12);
 
   const [jugadoresComprados, setJugadoresComprados] = useState([]);
   const [loadingComprados, setLoadingComprados] = useState(true);
@@ -38,6 +39,15 @@ export default function Mercado({ jugadores, nacionalidades }) {
 
     cargarJugadoresComprados();
   }, []);
+
+  useEffect(() => {
+  setCantidadVisible(12);
+  }, [
+    busqueda,
+    filtroPosicion,
+    filtroNacionalidad,
+    filtroPrecio,
+  ]);
 
   const idsComprados = useMemo(() => {
     return jugadoresComprados.map((item) => item.id_jugador);
@@ -77,6 +87,32 @@ export default function Mercado({ jugadores, nacionalidades }) {
     }
   };
 
+  const venderJugador = async (jugadorId) => {
+  const response = await fetch("/api/vender", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      jugadorId,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    alert(data.error || "Error al vender jugador");
+    return;
+  }
+
+  alert("Jugador vendido correctamente");
+
+  setJugadoresComprados((prev) =>
+    prev.filter((item) => item.id_jugador !== jugadorId)
+  );
+};
+
   const fuse = useMemo(() => {
     return new Fuse(jugadores, {
       keys: ["nombre", "club", "nacionalidad"],
@@ -115,6 +151,8 @@ export default function Mercado({ jugadores, nacionalidades }) {
     fuse,
   ]);
 
+  const jugadoresVisibles = jugadoresFiltrados.slice(0, cantidadVisible);
+
   return (
     <>
       <div className="flex-1 px-4 md:px-margin py-margin pb-32 md:pb-margin">
@@ -149,13 +187,14 @@ export default function Mercado({ jugadores, nacionalidades }) {
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-gutter gap-y-12 mt-8">
-              {jugadoresFiltrados.map((j) => {
+              {jugadoresVisibles.map((j) => {
                 const comprado = idsComprados.includes(j.id);
 
                 return (
                   <Card
                     key={j.id}
                     onCompra={comprarJugador}
+                    onVenta={venderJugador}
                     comprado={comprado}
                     price={j.precio}
                     age={j.edad}
@@ -169,6 +208,17 @@ export default function Mercado({ jugadores, nacionalidades }) {
                 );
               })}
             </div>
+
+            {cantidadVisible < jugadoresFiltrados.length && (
+              <div className="mt-12 flex justify-center">
+                <button
+                  onClick={() => setCantidadVisible((prev) => prev + 12)}
+                  className="rounded-2xl bg-primary px-8 py-4 font-display text-lg font-bold uppercase text-black transition hover:scale-[1.02] hover:shadow-glow"
+                >
+                  Cargar más jugadores
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
