@@ -48,7 +48,7 @@ El CRUD administra estos campos de la tabla `jugadores`:
 ## Decisiones de diseño
 
 - La edición se hace en un `<dialog>` nativo para evitar instalar librerías.
-- La eliminación pide confirmación con `confirm()` para mantener la implementación simple.
+- La eliminación usa un `<dialog>` estilizado, sin `confirm()` nativo del navegador.
 - El backend convierte campos numéricos con una función común antes de guardar.
 - La API no confía en el frontend: cada operación vuelve a validar sesión y permisos admin.
 - La tabla se mantiene como fuente visual principal porque es más útil para administración que tarjetas.
