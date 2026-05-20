@@ -5,7 +5,7 @@ import "../styles/tailwind.css";
 
 <HomeLayout active="perfil">
   <section class="mx-auto max-w-5xl px-6 py-10">
-    <div class="rounded-3xl border border-white/10 bg-surface/60 p-8 shadow-2xl backdrop-blur-xl">
+    <div class="rounded-3xl border border-white/10 bg-surface/60 p-8 shadow-2xl backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-glow">
       <p class="font-display text-sm font-bold uppercase tracking-[0.3em] text-primary">
         Perfil del manager
       </p>
@@ -16,21 +16,21 @@ import "../styles/tailwind.css";
 
       <!-- Datos del usuario -->
       <div class="mt-10 grid gap-6 md:grid-cols-2">
-        <div class="rounded-2xl border border-white/10 bg-background/40 p-6">
+        <div class="rounded-2xl border border-white/10 bg-background/40 p-6 transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-primary/5">
           <p class="text-sm uppercase text-textMuted">Nombre</p>
           <h2 id="profileName" class="mt-2 font-display text-3xl font-bold text-primary">
             Cargando...
           </h2>
         </div>
 
-        <div class="rounded-2xl border border-white/10 bg-background/40 p-6">
+        <div class="rounded-2xl border border-white/10 bg-background/40 p-6 transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-primary/5">
           <p class="text-sm uppercase text-textMuted">Equipo</p>
           <h2 id="teamName" class="mt-2 font-display text-3xl font-bold text-text">
             Cargando...
           </h2>
         </div>
 
-        <div class="rounded-2xl border border-white/10 bg-background/40 p-6 md:col-span-2">
+        <div class="rounded-2xl border border-white/10 bg-background/40 p-6 transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-primary/5 md:col-span-2">
           <p class="text-sm uppercase text-textMuted">Email</p>
           <h2 id="profileEmail" class="mt-2 text-xl font-bold text-text">
             Cargando...
@@ -40,21 +40,21 @@ import "../styles/tailwind.css";
 
       <!-- Resumen del equipo -->
       <div class="mt-10 grid gap-6 md:grid-cols-3">
-        <div class="rounded-2xl border border-white/10 bg-background/40 p-6">
+        <div class="rounded-2xl border border-white/10 bg-background/40 p-6 transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-primary/5">
           <p class="text-sm uppercase text-textMuted">Jugadores</p>
           <h2 id="playersCount" class="mt-2 font-display text-4xl font-bold text-primary">
             0
           </h2>
         </div>
 
-        <div class="rounded-2xl border border-white/10 bg-background/40 p-6">
+        <div class="rounded-2xl border border-white/10 bg-background/40 p-6 transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-primary/5">
           <p class="text-sm uppercase text-textMuted">Gastado</p>
           <h2 id="moneySpent" class="mt-2 font-display text-4xl font-bold text-text">
             $0M
           </h2>
         </div>
 
-        <div class="rounded-2xl border border-white/10 bg-background/40 p-6">
+        <div class="rounded-2xl border border-white/10 bg-background/40 p-6 transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-primary/5">
           <p class="text-sm uppercase text-textMuted">Saldo</p>
           <h2 id="moneyLeft" class="mt-2 font-display text-4xl font-bold text-accent">
             $0M
@@ -73,7 +73,7 @@ import "../styles/tailwind.css";
 
       <button
         id="logoutBtn"
-        class="mt-10 w-full rounded-2xl bg-primary px-6 py-4 font-display text-lg font-bold uppercase text-black transition hover:scale-[1.01] hover:shadow-glow"
+        class="mt-10 w-full rounded-2xl bg-primary px-6 py-4 font-display text-lg font-bold uppercase text-black transition duration-300 hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-glow active:translate-y-0"
       >
         Cerrar sesión
       </button>
@@ -144,7 +144,7 @@ import "../styles/tailwind.css";
 
       if (jugadores.length === 0) {
         playersList.innerHTML = `
-          <div class="rounded-2xl border border-white/10 bg-background/40 p-6 md:col-span-2">
+          <div class="rounded-2xl border border-white/10 bg-background/40 p-6 transition duration-300 hover:border-primary/40 hover:bg-primary/5 md:col-span-2">
             <p class="text-textMuted">Todavía no tienes jugadores comprados.</p>
           </div>
         `;
@@ -152,12 +152,12 @@ import "../styles/tailwind.css";
       }
 
       playersList.innerHTML = jugadores.map((player) => `
-        <div class="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-background/40 p-4">
+        <div class="group flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-background/40 p-4 transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-primary/5 hover:shadow-glow">
           
           <div class="flex items-center gap-4">
             <img
               src="${player.imagen_url || ""}"
-              class="h-16 w-16 rounded-full object-cover"
+              class="h-16 w-16 rounded-full object-cover ring-2 ring-white/10 transition duration-300 group-hover:ring-primary/60"
               alt="${player.nombre || "Jugador"}"
             />
 
@@ -173,7 +173,7 @@ import "../styles/tailwind.css";
           </div>
 
           <button
-            class="rounded-lg bg-red-500 px-4 py-2 text-sm font-bold uppercase text-white transition hover:bg-red-400"
+            class="rounded-lg bg-red-500 px-4 py-2 text-sm font-bold uppercase text-white transition duration-300 hover:-translate-y-0.5 hover:bg-red-400 hover:shadow-[0_0_24px_rgba(248,113,113,0.35)] active:translate-y-0"
             onclick="venderJugador('${player.id}')"
           >
             Vender

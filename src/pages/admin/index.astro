@@ -81,7 +81,7 @@ const playerPayload = (jugador) =>
           </div>
 
           <a
-            class="inline-flex items-center justify-center gap-2 rounded-lg border border-outline-variant/40 bg-surface-container-high px-5 py-3 font-label-bold text-label-bold text-on-surface transition hover:border-primary hover:text-primary"
+            class="inline-flex items-center justify-center gap-2 rounded-lg border border-outline-variant/40 bg-surface-container-high px-5 py-3 font-label-bold text-label-bold text-on-surface transition-all duration-200 hover:-translate-y-0.5 hover:border-primary hover:text-primary hover:shadow-glow"
             href="/api/admin/debug"
             target="_blank"
           >
@@ -91,22 +91,22 @@ const playerPayload = (jugador) =>
         </div>
 
         <div class="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <div class="rounded-lg border border-outline-variant/20 bg-surface-container/60 p-4">
+          <div class="rounded-lg border border-outline-variant/20 bg-surface-container/60 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:bg-surface-container-high hover:shadow-glow">
             <p class="text-xs uppercase tracking-wider text-on-surface-variant">Jugadores</p>
             <p class="mt-1 font-headline-md text-2xl text-primary">{jugadores.length}</p>
           </div>
 
-          <div class="rounded-lg border border-outline-variant/20 bg-surface-container/60 p-4">
+          <div class="rounded-lg border border-outline-variant/20 bg-surface-container/60 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:bg-surface-container-high hover:shadow-glow">
             <p class="text-xs uppercase tracking-wider text-on-surface-variant">Paises</p>
             <p class="mt-1 font-headline-md text-2xl text-primary">{nacionalidades.length}</p>
           </div>
 
-          <div class="rounded-lg border border-outline-variant/20 bg-surface-container/60 p-4">
+          <div class="rounded-lg border border-outline-variant/20 bg-surface-container/60 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:bg-surface-container-high hover:shadow-glow">
             <p class="text-xs uppercase tracking-wider text-on-surface-variant">Posiciones</p>
             <p class="mt-1 font-headline-md text-2xl text-primary">{posiciones.length}</p>
           </div>
 
-          <div class="rounded-lg border border-outline-variant/20 bg-surface-container/60 p-4">
+          <div class="rounded-lg border border-outline-variant/20 bg-surface-container/60 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:bg-surface-container-high hover:shadow-glow">
             <p class="text-xs uppercase tracking-wider text-on-surface-variant">Valor total</p>
             <p class="mt-1 font-headline-md text-2xl text-primary">
               ${precioTotal.toFixed(1)}M
@@ -115,7 +115,7 @@ const playerPayload = (jugador) =>
         </div>
       </header>
 
-      <section class="rounded-xl border border-outline-variant/20 bg-surface-container/40 p-4 shadow-glow backdrop-blur-lg">
+      <section class="rounded-xl border border-outline-variant/20 bg-surface-container/40 p-4 shadow-glow backdrop-blur-lg transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-container/60">
         <div class="flex flex-col gap-4 lg:flex-row lg:items-center">
           <label class="relative min-w-0 flex-1">
             <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">
@@ -123,7 +123,7 @@ const playerPayload = (jugador) =>
             </span>
             <span class="sr-only">Buscar jugador</span>
             <input
-              class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high py-3 pl-10 pr-4 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary"
+              class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest py-3 pl-10 pr-4 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary"
               data-admin-search
               placeholder="Buscar por nombre, club, nacionalidad o posicion..."
               type="search"
@@ -134,7 +134,7 @@ const playerPayload = (jugador) =>
             <label class="relative">
               <span class="sr-only">Filtrar por posicion</span>
               <select
-                class="w-full appearance-none rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 pr-10 text-on-surface outline-none transition focus:ring-1 focus:ring-primary sm:w-52"
+                class="w-full appearance-none rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 pr-10 text-on-surface outline-none transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/50 hover:bg-surface-container-highest hover:shadow-glow focus:ring-1 focus:ring-primary sm:w-52"
                 data-position-filter
               >
                 <option value="">Todas las posiciones</option>
@@ -148,7 +148,7 @@ const playerPayload = (jugador) =>
             <label class="relative">
               <span class="sr-only">Filtrar por nacionalidad</span>
               <select
-                class="w-full appearance-none rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 pr-10 text-on-surface outline-none transition focus:ring-1 focus:ring-primary sm:w-56"
+                class="w-full appearance-none rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 pr-10 text-on-surface outline-none transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/50 hover:bg-surface-container-highest hover:shadow-glow focus:ring-1 focus:ring-primary sm:w-56"
                 data-nationality-filter
               >
                 <option value="">Todas las nacionalidades</option>
@@ -164,7 +164,7 @@ const playerPayload = (jugador) =>
         </div>
       </section>
 
-      <section class="rounded-xl border border-outline-variant/20 bg-surface-container/40 p-6 shadow-2xl backdrop-blur-lg">
+      <section class="rounded-xl border border-outline-variant/20 bg-surface-container/40 p-6 shadow-2xl backdrop-blur-lg transition-all duration-300 hover:-translate-y-1 hover:border-primary/35 hover:bg-surface-container/55">
         <div class="mb-6 flex flex-col gap-2 border-b border-outline-variant/20 pb-5">
           <p class="font-label-bold text-xs uppercase tracking-widest text-primary">
             Nuevo jugador
@@ -177,12 +177,12 @@ const playerPayload = (jugador) =>
         <form class="grid gap-4 md:grid-cols-2 xl:grid-cols-4" data-player-form>
           <label class="block space-y-2">
             <span class="font-label-bold text-xs uppercase text-on-surface-variant">Nombre</span>
-            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" name="nombre" placeholder="Lionel Messi" required type="text" />
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" name="nombre" placeholder="Lionel Messi" required type="text" />
           </label>
 
           <label class="block space-y-2">
             <span class="font-label-bold text-xs uppercase text-on-surface-variant">Posicion</span>
-            <select class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary" name="posicion" required>
+            <select class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary" name="posicion" required>
               <option value="">Seleccionar</option>
               {posicionesBase.map((posicion) => <option value={posicion}>{posicion} - {POSITION_LABELS[posicion]}</option>)}
             </select>
@@ -190,41 +190,41 @@ const playerPayload = (jugador) =>
 
           <label class="block space-y-2">
             <span class="font-label-bold text-xs uppercase text-on-surface-variant">Club</span>
-            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" name="club" placeholder="Inter Miami" type="text" />
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" name="club" placeholder="Inter Miami" type="text" />
           </label>
 
           <label class="block space-y-2">
             <span class="font-label-bold text-xs uppercase text-on-surface-variant">Nacionalidad</span>
-            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" name="nacionalidad" placeholder="Argentina o AR" required type="text" />
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" name="nacionalidad" placeholder="Argentina o AR" required type="text" />
           </label>
 
           <label class="block space-y-2">
             <span class="font-label-bold text-xs uppercase text-on-surface-variant">Edad</span>
-            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" min="0" name="edad" placeholder="36" type="number" />
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" min="0" name="edad" placeholder="36" type="number" />
           </label>
 
           <label class="block space-y-2">
             <span class="font-label-bold text-xs uppercase text-on-surface-variant">Precio</span>
-            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" min="0" name="precio" placeholder="12.5" step="0.1" type="number" />
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" min="0" name="precio" placeholder="12.5" step="0.1" type="number" />
           </label>
 
           <label class="block space-y-2">
             <span class="font-label-bold text-xs uppercase text-on-surface-variant">Goles</span>
-            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" min="0" name="goles" placeholder="0" type="number" />
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" min="0" name="goles" placeholder="0" type="number" />
           </label>
 
           <label class="block space-y-2">
             <span class="font-label-bold text-xs uppercase text-on-surface-variant">Asistencias</span>
-            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" min="0" name="asistencias" placeholder="0" type="number" />
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" min="0" name="asistencias" placeholder="0" type="number" />
           </label>
 
           <label class="block space-y-2 md:col-span-2 xl:col-span-3">
             <span class="font-label-bold text-xs uppercase text-on-surface-variant">Imagen URL</span>
-            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" name="imagen_url" placeholder="https://..." type="url" />
+            <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none transition placeholder:text-on-surface-variant/70 focus:border-transparent focus:ring-2 focus:ring-primary" name="imagen_url" placeholder="https://..." type="url" />
           </label>
 
           <div class="flex items-end">
-            <button class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 font-label-bold text-on-primary-fixed transition hover:bg-primary-fixed disabled:cursor-wait disabled:opacity-70" type="submit">
+            <button class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 font-label-bold text-on-primary-fixed transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary-fixed hover:shadow-glow disabled:cursor-wait disabled:opacity-70" type="submit">
               <span class="material-symbols-outlined">person_add</span>
               Crear jugador
             </button>
@@ -240,7 +240,7 @@ const playerPayload = (jugador) =>
             No se pudieron cargar los jugadores: {error.message}
           </div>
         ) : (
-          <section class="overflow-hidden rounded-xl border border-outline-variant/20 bg-surface-container/40 shadow-2xl backdrop-blur-lg">
+          <section class="overflow-hidden rounded-xl border border-outline-variant/20 bg-surface-container/40 shadow-2xl backdrop-blur-lg transition-all duration-300 hover:border-primary/35">
             <div class="flex flex-col gap-2 border-b border-outline-variant/20 p-6 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p class="font-label-bold text-xs uppercase tracking-widest text-primary">
@@ -286,7 +286,7 @@ const playerPayload = (jugador) =>
 
                       return (
                         <tr
-                          class="group transition hover:bg-primary/5"
+                          class="group transition-all duration-200 hover:bg-primary/5 hover:shadow-[inset_3px_0_0_rgba(149,211,186,0.65)]"
                           data-admin-row
                           data-nationality={normalizeCountryCode(jugador.nacionalidad)}
                           data-position={normalizePositionCode(jugador.posicion)}
@@ -294,12 +294,12 @@ const playerPayload = (jugador) =>
                         >
                           <td class="px-6 py-4">
                             <div class="flex items-center gap-4">
-                              <div class="relative h-14 w-14 overflow-hidden rounded-lg border border-outline-variant/50 bg-surface-container-highest">
+                              <div class="relative h-14 w-14 overflow-hidden rounded-lg border border-outline-variant/50 bg-surface-container-highest transition-all duration-200 group-hover:border-primary/60 group-hover:shadow-glow">
                                 {
                                   jugador.imagen_url ? (
                                     <img
                                       alt={`Retrato de ${jugador.nombre}`}
-                                      class="h-full w-full object-cover object-top"
+                                      class="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-110"
                                       src={jugador.imagen_url}
                                     />
                                   ) : (
@@ -352,7 +352,7 @@ const playerPayload = (jugador) =>
                           <td class="px-6 py-4">
                             <div class="flex justify-end gap-2">
                               <button
-                                class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-outline-variant/30 bg-surface-container-high text-on-surface-variant transition hover:border-primary hover:text-primary"
+                                class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-outline-variant/30 bg-surface-container-high text-on-surface-variant transition-all duration-200 hover:-translate-y-0.5 hover:border-primary hover:text-primary hover:shadow-glow"
                                 data-edit-player={playerPayload(jugador)}
                                 title="Editar jugador"
                                 type="button"
@@ -361,7 +361,7 @@ const playerPayload = (jugador) =>
                               </button>
 
                               <button
-                                class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-error/30 bg-error-container/20 text-error transition hover:bg-error-container/40"
+                                class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-error/30 bg-error-container/20 text-error transition-all duration-200 hover:-translate-y-0.5 hover:bg-error-container/40 hover:shadow-[0_10px_22px_rgba(255,180,171,0.18)]"
                                 data-delete-player={jugador.id}
                                 data-delete-name={jugador.nombre}
                                 title="Eliminar jugador"
@@ -406,49 +406,49 @@ const playerPayload = (jugador) =>
 
       <label class="block space-y-2">
         <span class="font-label-bold text-xs uppercase text-on-surface-variant">Nombre</span>
-        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="nombre" required type="text" />
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="nombre" required type="text" />
       </label>
 
       <label class="block space-y-2">
         <span class="font-label-bold text-xs uppercase text-on-surface-variant">Posicion</span>
-        <select class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="posicion" required>
+        <select class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="posicion" required>
           {posiciones.map((posicion) => <option value={posicion}>{posicion} - {POSITION_LABELS[posicion] ?? posicion}</option>)}
         </select>
       </label>
 
       <label class="block space-y-2">
         <span class="font-label-bold text-xs uppercase text-on-surface-variant">Club</span>
-        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="club" type="text" />
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="club" type="text" />
       </label>
 
       <label class="block space-y-2">
         <span class="font-label-bold text-xs uppercase text-on-surface-variant">Nacionalidad</span>
-        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="nacionalidad" placeholder="Argentina o AR" required type="text" />
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="nacionalidad" placeholder="Argentina o AR" required type="text" />
       </label>
 
       <label class="block space-y-2">
         <span class="font-label-bold text-xs uppercase text-on-surface-variant">Edad</span>
-        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" min="0" name="edad" type="number" />
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" min="0" name="edad" type="number" />
       </label>
 
       <label class="block space-y-2">
         <span class="font-label-bold text-xs uppercase text-on-surface-variant">Precio</span>
-        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" min="0" name="precio" step="0.1" type="number" />
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" min="0" name="precio" step="0.1" type="number" />
       </label>
 
       <label class="block space-y-2">
         <span class="font-label-bold text-xs uppercase text-on-surface-variant">Goles</span>
-        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" min="0" name="goles" type="number" />
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" min="0" name="goles" type="number" />
       </label>
 
       <label class="block space-y-2">
         <span class="font-label-bold text-xs uppercase text-on-surface-variant">Asistencias</span>
-        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" min="0" name="asistencias" type="number" />
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" min="0" name="asistencias" type="number" />
       </label>
 
       <label class="block space-y-2 md:col-span-2">
         <span class="font-label-bold text-xs uppercase text-on-surface-variant">Imagen URL</span>
-        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="imagen_url" type="url" />
+        <input class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-high transition-all duration-200 hover:border-primary/50 hover:bg-surface-container-highest px-4 py-3 text-on-surface outline-none focus:ring-2 focus:ring-primary" name="imagen_url" type="url" />
       </label>
 
       <p class="hidden rounded-lg border px-4 py-3 text-sm md:col-span-2" data-edit-message></p>

@@ -22,7 +22,7 @@ import "../styles/tailwind.css";
 
     <main class="relative z-10 mx-auto flex min-h-screen max-w-container items-center justify-center px-6">
       <div
-        class="w-full max-w-md rounded-2xl border border-white/10 bg-surface/60 p-8 shadow-2xl backdrop-blur-xl"
+        class="w-full max-w-md rounded-2xl border border-white/10 bg-surface/60 p-8 shadow-2xl backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-glow"
       >
        
 
@@ -49,7 +49,7 @@ import "../styles/tailwind.css";
             name="email"
               type="email"
               placeholder="manager@fantasy.com"
-              class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition focus:border-primary"
+              class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition duration-300 hover:border-primary/40 hover:bg-background/80 focus:border-primary focus:shadow-[0_0_0_3px_rgba(148,210,189,0.14)]"
             />
           </div>
 
@@ -63,7 +63,7 @@ import "../styles/tailwind.css";
               name="password"
               type="password"
               placeholder="••••••••"
-              class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition focus:border-primary"
+              class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition duration-300 hover:border-primary/40 hover:bg-background/80 focus:border-primary focus:shadow-[0_0_0_3px_rgba(148,210,189,0.14)]"
             />
           </div>
 
@@ -72,7 +72,7 @@ import "../styles/tailwind.css";
           <!-- button -->
           <button
             type="submit"
-            class="w-full rounded-2xl bg-primary px-6 py-4 font-display text-lg font-bold uppercase text-black transition hover:scale-[1.01] hover:shadow-glow"
+            class="w-full rounded-2xl bg-primary px-6 py-4 font-display text-lg font-bold uppercase text-black transition duration-300 hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-glow active:translate-y-0"
           >
             Entrar
           </button>
@@ -89,7 +89,7 @@ import "../styles/tailwind.css";
 
               <a
                 href="/registro"
-                class="ml-1 font-semibold text-accent transition hover:opacity-80"
+                class="ml-1 rounded-md px-1 font-semibold text-accent transition duration-300 hover:bg-accent/10 hover:text-primary hover:opacity-100"
               >
                 Registrarse
               </a>
