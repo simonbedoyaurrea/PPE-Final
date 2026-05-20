@@ -17,19 +17,18 @@ export async function POST({ request, cookies }) {
       });
     }
 
-    // Guardar tokens en cookies
     cookies.set("sb-access-token", data.session.access_token, {
-      httpOnly: false,
+      httpOnly: true,
+      secure: true,
       sameSite: "lax",
-      secure: false,
       path: "/",
       maxAge: data.session.expires_in,
     });
 
     cookies.set("sb-refresh-token", data.session.refresh_token, {
-      httpOnly: false,
+      httpOnly: true,
+      secure: true,
       sameSite: "lax",
-      secure: false,
       path: "/",
       maxAge: 604800,
     });
