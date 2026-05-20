@@ -1,3 +1,5 @@
+import { useRef, useState } from "react";
+
 const formationSlots = [
   { key: "fwd-left", position: "FWD", left: 20, top: 15 },
   { key: "fwd-center", position: "FWD", left: 50, top: 10 },
@@ -13,22 +15,41 @@ const formationSlots = [
 ];
 
 const positionBadge = {
-  FWD: "bg-inverse-primary text-on-primary",
-  MID: "bg-secondary text-on-secondary",
-  DEF: "bg-surface-bright text-on-surface border border-outline-variant",
-  GK: "bg-tertiary-container text-on-tertiary-container border border-tertiary",
+  FWD: "bg-tertiary-container text-tertiary-fixed-dim border border-tertiary/70",
+  MID: "bg-[#172b44] text-[#9ed2ff] border border-[#5fa8e8]/70",
+  DEF: "bg-error-container/25 text-error border border-error/50",
+  GK: "bg-[#2d2546] text-[#c7b7ff] border border-[#8f7cff]/70",
 };
 
 const positionAccent = {
-  FWD: "border-primary",
-  MID: "border-secondary",
-  DEF: "border-outline-variant",
-  GK: "border-tertiary",
+  FWD: "border-tertiary shadow-[0_0_18px_rgba(249,189,34,0.25)]",
+  MID: "border-[#5fa8e8] shadow-[0_0_18px_rgba(95,168,232,0.25)]",
+  DEF: "border-error shadow-[0_0_18px_rgba(255,180,171,0.22)]",
+  GK: "border-[#8f7cff] shadow-[0_0_18px_rgba(143,124,255,0.25)]",
+};
+
+const positionName = {
+  FWD: "Ataque",
+  MID: "Medio",
+  DEF: "Defensa",
+  GK: "Porteria",
 };
 
 const formatMoney = (value) => `$${Number(value).toFixed(1)}M`;
 
 export default function SquadPitch({ ownedPlayers = [], budgetLeft = 15.5 }) {
+  const [aviso, setAviso] = useState(null);
+  const avisoTimeout = useRef(null);
+
+  const mostrarAviso = (tipo, titulo, mensaje) => {
+    if (avisoTimeout.current) {
+      window.clearTimeout(avisoTimeout.current);
+    }
+
+    setAviso({ tipo, titulo, mensaje });
+    avisoTimeout.current = window.setTimeout(() => setAviso(null), 3500);
+  };
+
   const playersByPosition = ownedPlayers.reduce((groups, player) => {
     const position = player.position ?? "MID";
     groups[position] = groups[position] ?? [];
@@ -66,7 +87,7 @@ export default function SquadPitch({ ownedPlayers = [], budgetLeft = 15.5 }) {
   const data = await response.json();
 
   if (!response.ok) {
-    alert(data.error || "Error al vender jugador");
+    mostrarAviso("error", "No se pudo vender", data.error || "Error al vender jugador");
     return;
   }
 
@@ -75,10 +96,31 @@ export default function SquadPitch({ ownedPlayers = [], budgetLeft = 15.5 }) {
 
   return (
     <div className="grid grid-cols-1 gap-gutter lg:grid-cols-12">
-      <div className="lg:col-span-8 xl:col-span-9 bg-surface-container/30 border border-outline-variant/20 rounded-3xl p-4 backdrop-blur-xl shadow-2xl relative">
+      {aviso && (
+        <div className="fixed right-4 top-4 z-50 w-[min(360px,calc(100vw-32px))] rounded-2xl border border-outline-variant/30 bg-surface-container-high p-4 text-on-surface shadow-[0_18px_42px_rgba(0,0,0,0.45)]">
+          <div className="flex gap-3">
+            <span
+              className={`material-symbols-outlined mt-0.5 text-[22px] ${
+                aviso.tipo === "error" ? "text-error" : "text-primary"
+              }`}
+            >
+              {aviso.tipo === "error" ? "error" : "check_circle"}
+            </span>
+
+            <div>
+              <p className="font-label-bold text-label-bold">{aviso.titulo}</p>
+              <p className="mt-1 text-sm text-on-surface-variant">
+                {aviso.mensaje}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="lg:col-span-8 xl:col-span-9 bg-surface-container/30 border border-outline-variant/20 rounded-3xl p-4 backdrop-blur-xl shadow-2xl relative transition-all duration-300 hover:border-primary/35 hover:shadow-[0_24px_54px_rgba(0,0,0,0.38)]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(6,78,59,0.15)_0%,transparent_70%)] rounded-3xl pointer-events-none"></div>
 
-        <div className="w-full max-w-[600px] aspect-[4/5] mx-auto relative rounded-2xl overflow-hidden bg-[#0A1A14] border border-primary/20 shadow-inner">
+        <div className="w-full max-w-[600px] aspect-[4/5] mx-auto relative rounded-2xl overflow-hidden bg-[#0A1A14] border border-primary/20 shadow-inner transition-all duration-300 hover:border-primary/45">
           <div
             className="absolute inset-0 opacity-20 mix-blend-overlay"
             style={{
@@ -97,7 +139,7 @@ export default function SquadPitch({ ownedPlayers = [], budgetLeft = 15.5 }) {
 
             return (
               <div
-                className="absolute -translate-x-1/2 -translate-y-1/2 w-16 md:w-20 flex flex-col items-center group cursor-pointer hover:scale-105 transition-transform z-20"
+                className="absolute -translate-x-1/2 -translate-y-1/2 w-[76px] md:w-24 flex flex-col items-center group cursor-pointer transition-all duration-300 hover:-translate-y-[54%] hover:scale-105 z-20"
                 key={slot.key}
                 style={{ left: `${slot.left}%`, top: `${slot.top}%` }}
               >
@@ -105,18 +147,18 @@ export default function SquadPitch({ ownedPlayers = [], budgetLeft = 15.5 }) {
                   className={`relative w-12 h-12 md:w-14 md:h-14 rounded-full border-[3px] ${
                     player
                       ? positionAccent[slot.position]
-                      : "border-dashed border-outline-variant"
-                  } z-10 -mb-3 overflow-hidden transition-colors shadow-[0_4px_20px_rgba(0,0,0,0.5)]`}
+                      : "border-dashed border-outline-variant group-hover:border-primary"
+                  } z-10 -mb-3 overflow-hidden transition-all duration-300 bg-surface-container-lowest shadow-[0_4px_20px_rgba(0,0,0,0.5)] group-hover:shadow-glow`}
                 >
                   {player?.image ? (
                     <img
                       alt={player.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                       src={player.image}
                     />
                   ) : (
-                    <div className="w-full h-full bg-surface-variant/80 flex items-center justify-center text-on-surface-variant">
-                      <span className="material-symbols-outlined">add</span>
+                    <div className="w-full h-full bg-surface-variant/80 flex items-center justify-center text-on-surface-variant transition-colors duration-300 group-hover:bg-primary/15 group-hover:text-primary">
+                      <span className="material-symbols-outlined text-[22px]">add</span>
                     </div>
                   )}
                 </div>
@@ -124,18 +166,19 @@ export default function SquadPitch({ ownedPlayers = [], budgetLeft = 15.5 }) {
                 <div
                   className={`${
                     player
-                      ? "bg-surface-container-highest/90 border-outline-variant/40"
-                      : "bg-surface-container/80 border-dashed border-outline-variant/60"
-                  } backdrop-blur-md w-full pt-4 pb-1 rounded-md border flex flex-col items-center shadow-xl`}
+                      ? "bg-surface-container-highest/90 border-outline-variant/40 group-hover:border-primary/40"
+                      : "bg-surface-container/85 border-dashed border-outline-variant/60 group-hover:border-primary/60 group-hover:bg-surface-container-high"
+                  } backdrop-blur-md w-full pt-4 pb-2 rounded-lg border flex flex-col items-center shadow-xl transition-all duration-300`}
                 >
                   <span
                     className={`font-label-bold text-[11px] md:text-label-bold ${
                       player ? "text-on-surface" : "text-on-surface-variant"
                     } truncate w-full text-center px-1`}
                   >
-                    {player?.name ?? "Sin compra"}
+                    {player?.name ?? "Disponible"}
                   </span>
-                  {player && (
+
+                  {player ? (
                     <button
                       onClick={() => venderJugador(player.id)}
                       className="
@@ -149,18 +192,25 @@ export default function SquadPitch({ ownedPlayers = [], budgetLeft = 15.5 }) {
                         uppercase
                         text-white
                         transition
+                        hover:-translate-y-0.5
                         hover:bg-red-400
+                        hover:shadow-[0_8px_18px_rgba(239,68,68,0.28)]
                       "
                     >
                       Vender
                     </button>
+                  ) : (
+                    <span className="mt-1 rounded-md border border-outline-variant/40 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-on-surface-variant transition-colors duration-300 group-hover:border-primary/60 group-hover:text-primary">
+                      Agregar
+                    </span>
                   )}
                 </div>
 
                 <div
                   className={`absolute -top-2 -right-2 ${
                     positionBadge[slot.position]
-                  } text-[9px] font-bold px-1.5 rounded-sm z-30`}
+                  } text-[9px] font-bold px-1.5 rounded-md z-30 shadow-md`}
+                  title={positionName[slot.position]}
                 >
                   {slot.position}
                 </div>
@@ -177,7 +227,7 @@ export default function SquadPitch({ ownedPlayers = [], budgetLeft = 15.5 }) {
       </div>
 
       <div className="lg:col-span-4 xl:col-span-3 flex flex-col gap-gutter">
-        <div className="bg-surface-container/40 backdrop-blur-lg rounded-2xl p-6 border border-outline-variant/20 shadow-xl relative overflow-hidden group hover:border-primary/50 transition-colors">
+        <div className="bg-surface-container/40 backdrop-blur-lg rounded-2xl p-6 border border-outline-variant/20 shadow-xl relative overflow-hidden group transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-glow">
           <h3 className="text-label-bold font-label-bold text-on-surface-variant uppercase tracking-widest mb-4">
             Plantilla
           </h3>
@@ -199,7 +249,7 @@ export default function SquadPitch({ ownedPlayers = [], budgetLeft = 15.5 }) {
           </div>
         </div>
 
-        <div className="bg-surface-container/40 backdrop-blur-lg rounded-2xl p-5 border border-outline-variant/20 shadow-xl">
+        <div className="bg-surface-container/40 backdrop-blur-lg rounded-2xl p-5 border border-outline-variant/20 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-glow">
           <h3 className="text-label-bold font-label-bold text-on-surface-variant uppercase tracking-widest mb-4">
             Presupuesto
           </h3>
@@ -221,7 +271,7 @@ export default function SquadPitch({ ownedPlayers = [], budgetLeft = 15.5 }) {
           </div>
         </div>
 
-        <div className="bg-surface-container/40 backdrop-blur-lg rounded-2xl p-5 border border-outline-variant/20 shadow-xl">
+        <div className="bg-surface-container/40 backdrop-blur-lg rounded-2xl p-5 border border-outline-variant/20 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-glow">
           <h3 className="text-label-bold font-label-bold text-on-surface-variant uppercase tracking-widest mb-4">
             Plantilla activa
           </h3>

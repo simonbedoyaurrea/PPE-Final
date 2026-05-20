@@ -76,6 +76,11 @@ import "../styles/tailwind.css";
             Entrar
           </button>
 
+          <p
+            class="hidden rounded-xl border px-4 py-3 text-sm"
+            data-login-message
+          ></p>
+
           <!-- register -->
           <div class="pt-2 text-center">
             <p class="text-sm text-textMuted">
@@ -95,6 +100,37 @@ import "../styles/tailwind.css";
   </body>
 
   <script is:inline>
+    function showFormMessage(message, type = "error") {
+      const element = document.querySelector("[data-login-message]");
+      if (!element) return;
+
+      element.textContent = message;
+      element.classList.remove(
+        "hidden",
+        "border-error/30",
+        "bg-error-container/30",
+        "text-on-error-container",
+        "border-primary/30",
+        "bg-primary-container/30",
+        "text-primary",
+      );
+
+      if (type === "error") {
+        element.classList.add(
+          "border-error/30",
+          "bg-error-container/30",
+          "text-on-error-container",
+        );
+        return;
+      }
+
+      element.classList.add(
+        "border-primary/30",
+        "bg-primary-container/30",
+        "text-primary",
+      );
+    }
+
     async function handleSubmit(event) {
       event.preventDefault();
 
@@ -118,7 +154,7 @@ import "../styles/tailwind.css";
 
       if (!response.ok) {
         console.error("❌ Error en login:", data.error);
-        alert(data.error || "Email o contraseña incorrectos");
+        showFormMessage(data.error || "Email o contraseña incorrectos");
         return;
       }
 

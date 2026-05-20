@@ -113,6 +113,11 @@ import "../styles/tailwind.css";
               Crear cuenta
             </button>
 
+            <p
+              class="hidden rounded-xl border px-4 py-3 text-sm"
+              data-register-message
+            ></p>
+
             <div class="pt-2 text-center">
               <p class="text-sm text-textMuted">
                 ¿Ya tienes cuenta?
@@ -131,6 +136,37 @@ import "../styles/tailwind.css";
     </main>
   </body>
  <script is:inline>
+  function showFormMessage(message, type = "error") {
+    const element = document.querySelector("[data-register-message]");
+    if (!element) return;
+
+    element.textContent = message;
+    element.classList.remove(
+      "hidden",
+      "border-error/30",
+      "bg-error-container/30",
+      "text-on-error-container",
+      "border-primary/30",
+      "bg-primary-container/30",
+      "text-primary",
+    );
+
+    if (type === "error") {
+      element.classList.add(
+        "border-error/30",
+        "bg-error-container/30",
+        "text-on-error-container",
+      );
+      return;
+    }
+
+    element.classList.add(
+      "border-primary/30",
+      "bg-primary-container/30",
+      "text-primary",
+    );
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -157,7 +193,7 @@ import "../styles/tailwind.css";
     const data = await response.json();
 
     if (!response.ok) {
-      alert(data.error || "Error al crear la cuenta");
+      showFormMessage(data.error || "Error al crear la cuenta");
       return;
     }
 

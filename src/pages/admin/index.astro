@@ -457,6 +457,39 @@ const playerPayload = (jugador) =>
       </div>
     </form>
   </dialog>
+
+  <dialog class="fixed inset-0 m-auto w-[min(440px,calc(100vw-32px))] rounded-xl border border-outline-variant/30 bg-surface-container p-0 text-on-surface shadow-2xl backdrop:bg-black/70" data-delete-dialog>
+    <div class="p-6">
+      <div class="flex items-start gap-3">
+        <span class="material-symbols-outlined rounded-lg bg-error-container/30 p-2 text-error">
+          warning
+        </span>
+
+        <div>
+          <p class="font-label-bold text-xs uppercase tracking-widest text-error">
+            Eliminar jugador
+          </p>
+          <h2 class="mt-1 font-headline-lg text-2xl font-bold text-on-surface">
+            Confirmar eliminacion
+          </h2>
+          <p class="mt-3 text-sm text-on-surface-variant" data-delete-copy>
+            Esta accion no se puede deshacer.
+          </p>
+        </div>
+      </div>
+
+      <p class="mt-4 hidden rounded-lg border px-4 py-3 text-sm" data-delete-message></p>
+
+      <div class="mt-6 flex flex-col-reverse gap-3 border-t border-outline-variant/20 pt-4 sm:flex-row sm:justify-end">
+        <button class="rounded-lg border border-outline-variant/40 px-5 py-3 font-label-bold text-label-bold text-on-surface-variant transition hover:border-primary hover:text-primary" data-cancel-delete type="button">
+          Cancelar
+        </button>
+        <button class="rounded-lg bg-error px-5 py-3 font-label-bold text-label-bold text-on-error-container transition hover:opacity-90 disabled:cursor-wait disabled:opacity-70" data-confirm-delete type="button">
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </dialog>
 </HomeLayout>
 
 <script>
@@ -471,6 +504,12 @@ const playerPayload = (jugador) =>
   const editDialog = document.querySelector("[data-edit-dialog]");
   const editForm = document.querySelector("[data-edit-form]");
   const editMessage = document.querySelector("[data-edit-message]");
+  const deleteDialog = document.querySelector("[data-delete-dialog]");
+  const deleteCopy = document.querySelector("[data-delete-copy]");
+  const deleteMessage = document.querySelector("[data-delete-message]");
+  const cancelDeleteButton = document.querySelector("[data-cancel-delete]");
+  const confirmDeleteButton = document.querySelector("[data-confirm-delete]");
+  let pendingDelete = null;
 
   function setMessage(element, message, type = "success") {
     if (!element) return;
@@ -607,22 +646,42 @@ const playerPayload = (jugador) =>
   });
 
   document.querySelectorAll("[data-delete-player]").forEach((button) => {
-    button.addEventListener("click", async () => {
-      const playerId = button.dataset.deletePlayer;
-      const playerName = button.dataset.deleteName || "este jugador";
-      const confirmed = window.confirm(`Eliminar a ${playerName}? Esta accion no se puede deshacer.`);
+    button.addEventListener("click", () => {
+      pendingDelete = {
+        id: button.dataset.deletePlayer,
+        name: button.dataset.deleteName || "este jugador",
+        button,
+      };
 
-      if (!confirmed) return;
-
-      button.disabled = true;
-
-      try {
-        await sendPlayerRequest("DELETE", { id: playerId });
-        window.location.reload();
-      } catch (error) {
-        alert(error.message);
-        button.disabled = false;
+      if (deleteCopy) {
+        deleteCopy.textContent = `Vas a eliminar a ${pendingDelete.name}. Esta accion no se puede deshacer.`;
       }
+
+      deleteMessage?.classList.add("hidden");
+      deleteDialog?.showModal();
     });
+  });
+
+  cancelDeleteButton?.addEventListener("click", () => {
+    pendingDelete = null;
+    deleteDialog?.close();
+  });
+
+  confirmDeleteButton?.addEventListener("click", async () => {
+    if (!pendingDelete) return;
+
+    confirmDeleteButton.disabled = true;
+    pendingDelete.button.disabled = true;
+    setMessage(deleteMessage, "Eliminando jugador...");
+
+    try {
+      await sendPlayerRequest("DELETE", { id: pendingDelete.id });
+      setMessage(deleteMessage, "Jugador eliminado. Actualizando tabla...");
+      window.setTimeout(() => window.location.reload(), 600);
+    } catch (error) {
+      setMessage(deleteMessage, error.message, "error");
+      pendingDelete.button.disabled = false;
+      confirmDeleteButton.disabled = false;
+    }
   });
 </script>

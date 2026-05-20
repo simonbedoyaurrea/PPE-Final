@@ -81,6 +81,36 @@ import "../styles/tailwind.css";
   </section>
 
   <script is:inline>
+    let noticeTimeout;
+
+    function showNotice(type, title, message) {
+      const previousNotice = document.querySelector("[data-profile-notice]");
+      previousNotice?.remove();
+
+      if (noticeTimeout) {
+        window.clearTimeout(noticeTimeout);
+      }
+
+      const notice = document.createElement("div");
+      notice.dataset.profileNotice = "true";
+      notice.className =
+        "fixed right-4 top-4 z-50 w-[min(360px,calc(100vw-32px))] rounded-2xl border border-outline-variant/30 bg-surface-container-high p-4 text-on-surface shadow-[0_18px_42px_rgba(0,0,0,0.45)]";
+      notice.innerHTML = `
+        <div class="flex gap-3">
+          <span class="material-symbols-outlined mt-0.5 text-[22px] ${type === "error" ? "text-error" : "text-primary"}">
+            ${type === "error" ? "error" : "check_circle"}
+          </span>
+          <div>
+            <p class="font-label-bold text-label-bold">${title}</p>
+            <p class="mt-1 text-sm text-on-surface-variant">${message}</p>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(notice);
+      noticeTimeout = window.setTimeout(() => notice.remove(), 3500);
+    }
+
     async function loadProfile() {
       const response = await fetch("/api/user");
       const data = await response.json();
@@ -166,7 +196,7 @@ import "../styles/tailwind.css";
         const data = await response.json();
 
         if (!response.ok) {
-          alert(data.error || "Error al vender");
+          showNotice("error", "No se pudo vender", data.error || "Error al vender");
           return;
         }
 
