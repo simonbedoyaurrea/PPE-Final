@@ -44,6 +44,22 @@ export default function Mercado({ jugadores, nacionalidades }) {
   }, [jugadoresComprados]);
 
   const comprarJugador = async (jugadorId) => {
+
+  const jugador = jugadores.find((j) => j.id === jugadorId);
+
+  if (!jugador) {
+    alert("Jugador no encontrado");
+    return;
+  }
+
+  const posicion = jugador.posicion;
+  const cantidadActual = conteoPosiciones[posicion] || 0;
+  const limite = limitesPorPosicion[posicion];
+
+  if (limite && cantidadActual >= limite) {
+    alert(`Ya tienes cubiertos todos los cupos de ${posicion}`);
+    return;
+  }
     const response = await fetch("/api/comprar", {
       method: "POST",
       credentials: "include",
@@ -76,6 +92,24 @@ export default function Mercado({ jugadores, nacionalidades }) {
       ]);
     }
   };
+
+  const limitesPorPosicion = {
+  DEL: 3,
+  MED: 3,
+  DEF: 4,
+  POR: 1,
+};
+
+function contarPorPosicion(jugadoresComprados) {
+  return jugadoresComprados.reduce((contador, compra) => {
+    const posicion = compra.jugadores?.posicion || compra.posicion;
+
+    contador[posicion] = (contador[posicion] || 0) + 1;
+
+    return contador;
+  }, {});
+}
+const conteoPosiciones = contarPorPosicion(jugadoresComprados);
 
   const fuse = useMemo(() => {
     return new Fuse(jugadores, {
@@ -140,6 +174,18 @@ export default function Mercado({ jugadores, nacionalidades }) {
               </span>
 
               <BarraBusqueda busqueda={busqueda} setBusqueda={setBusqueda} />
+
+              <div className="flex items-center gap-2">
+                <span className="font-body-md text-body-md text-on-surface-variant hidden sm:inline">
+                  Sort by:
+                </span>
+
+                <select className="bg-transparent border-none text-primary font-label-bold text-label-bold focus:ring-0 cursor-pointer">
+                  <option>Highest Price</option>
+                  <option>Total Points</option>
+                  <option>Form</option>
+                </select>
+              </div>
             </div>
 
             {loadingComprados && (
