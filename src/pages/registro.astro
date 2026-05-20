@@ -22,56 +22,51 @@ import "../styles/tailwind.css";
       class="pointer-events-none fixed left-1/2 top-0 z-0 h-[400px] w-[800px] -translate-x-1/2 rounded-full bg-primary/10 blur-[120px]"
     />
 
-    <main class="relative z-10 mx-auto flex min-h-screen max-w-container items-center justify-center px-6 py-12">
-      <section class="w-full max-w-2xl">
+    <main class="relative z-10 mx-auto flex min-h-screen max-w-container items-center justify-center px-6 py-10">
+      <section class="w-full max-w-3xl">
         <!-- Header -->
-        <div class="mb-10 text-center">
+        <div class="mb-8 text-center">
           <h1
-            class="font-display text-5xl font-extrabold uppercase italic tracking-tight text-primary drop-shadow-lg"
+            class="font-display text-5xl font-extrabold uppercase italic tracking-tight text-primary drop-shadow-lg md:text-6xl"
           >
             Registro
           </h1>
-
-          <p class="mx-auto mt-4 max-w-lg text-lg text-textMuted">
-          </p>
         </div>
 
         <!-- Card -->
         <div
-          class="relative overflow-hidden rounded-2xl border border-white/10 bg-surface/60 p-8 shadow-2xl backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-glow"
+          class="relative overflow-hidden rounded-3xl border border-white/10 bg-surface/60 p-6 shadow-2xl backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-glow md:p-8"
         >
           <div
             class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-transparent via-primary to-transparent opacity-70"
           />
 
-          <form onsubmit="handleSubmit(event)" class="space-y-6">
+          <form onsubmit="handleSubmit(event)" class="grid gap-5 md:grid-cols-2">
             <!-- names -->
-            <div class="grid gap-6 md:grid-cols-2">
-              <div class="space-y-2">
-                <label class="text-sm font-semibold uppercase tracking-wide text-textMuted">
-                  Nombre
-                </label>
+            <div class="space-y-2">
+              <label class="text-sm font-semibold uppercase tracking-wide text-textMuted">
+                Nombre
+              </label>
 
-                <input
-                  name="name"
-                  type="text"
-                  placeholder="Pep Guardiola"
-                  class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition duration-300 hover:border-primary/40 hover:bg-background/80 focus:border-primary focus:shadow-[0_0_0_3px_rgba(148,210,189,0.14)]"
-                />
-              </div>
+              <input
+                name="name"
+                type="text"
+                placeholder="Pep Guardiola"
+                class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition duration-300 hover:border-primary/40 hover:bg-background/80 focus:border-primary focus:shadow-[0_0_0_3px_rgba(148,210,189,0.14)]"
+              />
+            </div>
 
-              <div class="space-y-2">
-                <label class="text-sm font-semibold uppercase tracking-wide text-textMuted">
-                  Nombre Equipo
-                </label>
+            <div class="space-y-2">
+              <label class="text-sm font-semibold uppercase tracking-wide text-textMuted">
+                Nombre Equipo
+              </label>
 
-                <input
-                  name="teamName"
-                  type="text"
-                  placeholder="Dream Team FC"
-                  class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition duration-300 hover:border-primary/40 hover:bg-background/80 focus:border-primary focus:shadow-[0_0_0_3px_rgba(148,210,189,0.14)]"
-                />
-              </div>
+              <input
+                name="teamName"
+                type="text"
+                placeholder="Dream Team FC"
+                class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition duration-300 hover:border-primary/40 hover:bg-background/80 focus:border-primary focus:shadow-[0_0_0_3px_rgba(148,210,189,0.14)]"
+              />
             </div>
 
             <!-- email -->
@@ -89,37 +84,33 @@ import "../styles/tailwind.css";
             </div>
 
             <!-- passwords -->
-            <div class="grid gap-6 md:grid-cols-2">
-              <div class="space-y-2">
-                <label class="text-sm font-semibold uppercase tracking-wide text-textMuted">
-                  Contraseña
-                </label>
+            <div class="space-y-2">
+              <label class="text-sm font-semibold uppercase tracking-wide text-textMuted">
+                Contraseña
+              </label>
 
-                <input
-                  name="password"
-                  type="password"
-                  placeholder="••••••••"
-                  class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition duration-300 hover:border-primary/40 hover:bg-background/80 focus:border-primary focus:shadow-[0_0_0_3px_rgba(148,210,189,0.14)]"
-                />
-              </div>
+              <input
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                class="w-full rounded-xl border border-outline bg-background/60 px-4 py-3 outline-none transition duration-300 hover:border-primary/40 hover:bg-background/80 focus:border-primary focus:shadow-[0_0_0_3px_rgba(148,210,189,0.14)]"
+              />
             </div>
-
-     
 
             <!-- login -->
             <button
               type="submit"
-              class="w-full rounded-2xl bg-primary px-6 py-4 font-display text-lg font-bold uppercase text-black transition duration-300 hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-glow active:translate-y-0"
+              class="w-full rounded-2xl bg-primary px-6 py-4 font-display text-lg font-bold uppercase text-black transition duration-300 hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-glow active:translate-y-0 md:col-span-2"
             >
               Crear cuenta
             </button>
 
             <p
-              class="hidden rounded-xl border px-4 py-3 text-sm"
+              class="hidden rounded-xl border px-4 py-3 text-sm md:col-span-2"
               data-register-message
             ></p>
 
-            <div class="pt-2 text-center">
+            <div class="text-center md:col-span-2">
               <p class="text-sm text-textMuted">
                 ¿Ya tienes cuenta?
 

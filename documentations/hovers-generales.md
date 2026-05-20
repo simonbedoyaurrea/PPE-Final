@@ -37,3 +37,9 @@ Las imagenes del carrusel hacen un zoom leve al pasar el cursor.
 Los formularios ahora reaccionan al hover sin cambiar su funcionamiento.
 
 Los inputs tienen mejor borde al pasar el cursor y un foco mas claro al escribir.
+
+En registro tambien se ajusto la disposicion del formulario para que los cuatro campos principales queden en una grilla equilibrada:
+
+- nombre y nombre del equipo en la primera fila;
+- email y contrasena en la segunda fila;
+- boton y mensajes ocupando todo el ancho.
